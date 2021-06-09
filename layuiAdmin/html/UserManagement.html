@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../layui/css/layui.css"  media="all">
+    <title>console</title>
+
+</head>
+<body>
+<div class="topGrid">
+
+    <div class="itemWrapper">
+        <div class="item">
+            <div class="name">Log</div>
+            <div class="number">日志</div>
+            <img src="../image/topGridBg.png">
+        </div>
+    </div>
+
+    <div class="itemWrapper">
+        <div class="item">
+            <div class="name">User Management</div>
+            <div class="number">用户管理</div>
+            <img src="../image/topGridBg.png">
+        </div>
+    </div>
+
+    <div class="itemWrapper">
+        <div class="item">
+            <div class="name">System Management</div>
+            <div class="number">系统管理</div>
+            <img src="../image/topGridBg.png">
+        </div>
+    </div>
+
+    <div class="itemWrapper">
+        <div class="item">
+            <div class="name">Help</div>
+            <div class="number">帮助</div>
+            <img src="../image/topGridBg.png">
+        </div>
+    </div>
+
+</div>
+
+<blockquote class="layui-elem-quote" style="height: 15px; margin-top: 20px;">
+    <p style="color:teal; font-size: 20px; font-weight: 550;">系统用户管理</p>
+  </blockquote>
+<div style="margin-top: 30px;"></div>
+<table class="layui-hide" id="demo" lay-filter="test"></table>
+
+
+<!--顶部操作栏-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">添加用户</button>
+    </div>
+</script>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
+</script>
+
+
+<script type="text/html" id="addDialog">
+    <form class="layui-form" action="" style="padding: 20px;" id="addDialogForm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="username" placeholder="用户名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-inline">
+                <input type="text" name="password" placeholder="密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-inline">
+                <input type="text" name="email" placeholder="邮箱" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户等级</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="degree" value="Junior" title="Junior" checked="">
+                <input type="radio" name="degree" value="Medium" title="Medium">
+                <!-- <input type="radio" name="degree" value="Advanced" title="Advanced"> -->
+            </div>
+        </div>
+    </form>
+</script>
+
+
+<script type="text/html" id="editDialog">
+    <form class="layui-form" action="" style="padding: 20px;" id="editDialogForm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="username" placeholder="用户名修改" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-inline">
+                <input type="text" name="password" placeholder="密码修改" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-inline">
+                <input type="text" name="email" placeholder="邮箱修改" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户等级</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="degree" value="Junior" title="Junior" checked="">
+                <input type="radio" name="degree" value="Medium" title="Medium">
+                <!-- <input type="radio" name="degree" value="Advanced" title="Advanced"> -->
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否注销</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="is_delete" value="false" title="false" checked="">
+                <input type="radio" name="is_delete" value="true" title="true">
+            </div>
+        </div>
+
+    </form>
+</script>
+
+<script src="../js/jquery.min.js"></script>
+<script src="../layui/layui.js"></script>
+<script src="../js/common.js"></script>
+<script src="../js/Ajax.js"></script>
+<!-- 给每个特征标签绑定事件 -->
+<script>
+layuiModules=['table', 'form'];
+
+function mounted() {
+// layui.use(['table', 'form'], function(){
+//     var table = layui.table,
+//     form = layui.form;
+
+    table.render({
+        elem: '#demo'
+        , toolbar: '#toolbarDemo'
+        // , toolbar: true
+        , id: 'test'
+        , height: 360
+        , limits: [10, 20, 30]
+        , method: 'POST'
+        , contentType: 'application/json' 
+        , url: 'http://122.51.255.207:8000/userInform' //数据接口
+        , request: {
+            pageName: 'page' //页码的参数名称，默认：page
+            ,limitName: 'limit' //每页数据量的参数名，默认：limit
+        }
+        // , where: {}  可通过where来指定接口的参数
+        , page: true //开启分页
+        // , even: true
+        , skin: 'line'
+        , cols: [[ //表头
+            {field: 'id', title: 'ID', width: 100, sort: true}
+            , {field: 'name', title: '用户名', width: 150}
+            , {field: 'password', title: '密码', width: 180}
+            , {field: 'email', title: '邮箱'}
+            , {field: 'degree', title: '等级', width: 160}
+            , {field: 'is_delete', title: '是否注销', width: 180}
+            , {fixed: 'right', align: 'center', toolbar: '#barDemo'} //这里的toolbar值是模板元素的选择器
+        ]]
+    });
+
+
+    //头工具栏事件
+    table.on('toolbar(test)', function(obj){
+        var layEvent = obj.event;
+        
+        if(layEvent === 'add'){
+            layer.open({
+                type: 1,
+                title: 'add',
+                area:['40%','60%'],
+                content: $('#addDialog').html(), //这里content是一个普通的String
+                btn: ['提交', '返回'],
+                success: function (index, layero) {
+                    // 不进行render渲染的话下拉框没法刷新出来
+                    form.render();
+                    // form.val("editDialogForm",data);
+                },
+                yes: function (index, layero) {
+                    var formData = formArray2Data($('#addDialogForm').serializeArray());
+                    console.log(formData);
+                    if(formData['username']==='' || formData['password']===''){
+                        alert('用户名及密码不能为空！');
+                    }else{
+                        var Data = JSON.stringify(formData);
+                        console.log(Data);
+                        var url = 'http://122.51.255.207:8000/addUser'
+                        var msgdata = Ajax(Data, url, 'POST');
+                        if(msgdata['msg']){
+                            alert('用户添加成功！');
+                            location.reload();
+                        }else{
+                            alert('用户添加失败');
+                        }
+                        layer.close(index);
+                    }    
+                },
+                btn2: function (index, layero) {
+                    //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+        }
+    });
+
+
+    table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+       if (layEvent === 'edit') { //编辑
+            //do something
+            layer.open({
+                type: 1,
+                title: 'modify',
+                area:['40%','80%'],
+                content: $('#editDialog').html(), //这里content是一个普通的String
+                btn: ['提交', '返回'],
+                success: function (index, layero) {
+                    // 不进行render渲染的话下拉框没法刷新出来
+                    form.render();
+                    // form.val("editDialogForm",data);
+                },
+                yes: function (index, layero) {
+                    var formData = formArray2Data($('#editDialogForm').serializeArray());
+                    console.log(formData);
+                    if(data['name']==='feifei'){
+                        alert('Malicious operation detected, Permission Deny!!!');
+                        layer.close(index);
+                        return false;
+                    }
+                    formData['id'] = obj['data']['id'];
+                    var Data = JSON.stringify(formData);
+                    console.log(Data);
+                    var url = 'http://122.51.255.207:8000/modifyUserInform'
+                    var msgdata = Ajax(Data, url, 'POST');
+                    if(msgdata['msg']){
+                        alert('修改成功！');
+                        location.reload();
+                    }else{
+                        alert('修改失败');
+                    }
+                    layer.close(index);
+                },
+                btn2: function (index, layero) {
+                    //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+        }
+    });
+
+    $(function () {
+        $(".itemWrapper").on("click", function (dom) {
+        	//这个dom对象里包括了当前点击的对象值
+            // console.log($(dom.currentTarget).text());
+            
+            // 获取当前dom对象域的文本内容
+            var str = dom.currentTarget.innerText;
+            // console.log(str);
+            // console.log(str.indexOf('User'));
+            var userdegree = window.sessionStorage.getItem('userdegree');
+            console.log(userdegree);
+            // 说明用户点击的是日志板块
+            if(str.indexOf('Log')!=-1){
+                // 如果不是系统顶级用户就没有权限查看
+                if(userdegree!=='Advanced' && userdegree!=='Medium'){
+                    alert('Permission Deny!');
+                }else{
+                    console.log('查看日志板块！');
+                    location.href = 'consoleLog.html';
+                }
+            }
+            // 说明点击的是用户管理板块
+            else if(str.indexOf('User')!=-1){
+                if(userdegree!=='Advanced'){
+                    alert('Permission Deny!');
+                }else{
+                    console.log('查看用户管理板块！');
+                    location.href = 'UserManagement.html';
+                }
+            }
+            // 说明点击的是系统管理板块
+            else if(str.indexOf('System')!=-1){
+                if(userdegree!=='Advanced'){
+                    alert('Permission Deny!');
+                }else{
+                    console.log('查看系统管理板块！');
+                    location.href = 'SystemManagement.html';
+                }
+            }
+            // 说明点击的是帮助板块
+            else if(str.indexOf('Help')!=-1){
+                console.log('查看帮助板块！');
+                location.href = 'Help.html';
+            }
+
+        })
+
+    });
+// });
+}
+</script>
+</body>
+</html>

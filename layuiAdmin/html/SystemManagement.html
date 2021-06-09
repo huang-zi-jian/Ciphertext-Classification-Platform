@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../layui/css/layui.css"  media="all">
+    <title>console</title>
+
+</head>
+<body>
+<div class="topGrid">
+
+    <div class="itemWrapper">
+        <div class="item">
+            <div class="name">Log</div>
+            <div class="number">日志</div>
+            <img src="../image/topGridBg.png">
+        </div>
+    </div>
+
+    <div class="itemWrapper">
+        <div class="item">
+            <div class="name">User Management</div>
+            <div class="number">用户管理</div>
+            <img src="../image/topGridBg.png">
+        </div>
+    </div>
+
+    <div class="itemWrapper">
+        <div class="item">
+            <div class="name">System Management</div>
+            <div class="number">系统管理</div>
+            <img src="../image/topGridBg.png">
+        </div>
+    </div>
+
+    <div class="itemWrapper">
+        <div class="item">
+            <div class="name">Help</div>
+            <div class="number">帮助</div>
+            <img src="../image/topGridBg.png">
+        </div>
+    </div>
+
+</div>
+
+<blockquote class="layui-elem-quote" style="height: 15px; margin-top: 20px;">
+    <p style="color:teal; font-size: 20px; font-weight: 550;">系统管理（静态文件管理）</p>
+  </blockquote>
+
+<div class="layui-collapse" lay-filter="test">
+<div class="layui-colla-item">
+    <h2 class="layui-colla-title">zipFile<i class="layui-icon layui-colla-icon"></i></h2>
+    <div class="layui-colla-content">
+        <table class="layui-hide" id="demo1" lay-filter="test1"></table>
+    </div>
+</div>
+<div class="layui-colla-item">
+    <h2 class="layui-colla-title">zipfile-crypto<i class="layui-icon layui-colla-icon"></i></h2>
+    <div class="layui-colla-content">
+        <table class="layui-hide" id="demo2" lay-filter="test2"></table>
+    </div>
+</div>
+<div class="layui-colla-item">
+    <h2 class="layui-colla-title">features<i class="layui-icon layui-colla-icon"></i></h2>
+    <div class="layui-colla-content">
+        <table class="layui-hide" id="demo3" lay-filter="test3"></table>
+    </div>
+</div>
+<div class="layui-colla-item">
+    <h2 class="layui-colla-title">FeaturesGenerate<i class="layui-icon layui-colla-icon"></i></h2>
+    <div class="layui-colla-content">
+        <table class="layui-hide" id="demo4" lay-filter="test4"></table>
+    </div>
+</div>
+<div class="layui-colla-item">
+    <h2 class="layui-colla-title">singlefile<i class="layui-icon layui-colla-icon"></i></h2>
+    <div class="layui-colla-content">
+        <table class="layui-hide" id="demo5" lay-filter="test5"></table>
+    </div>
+</div>
+<div class="layui-colla-item">
+    <h2 class="layui-colla-title">trainModelFile<i class="layui-icon layui-colla-icon"></i></h2>
+    <div class="layui-colla-content">
+        <table class="layui-hide" id="demo6" lay-filter="test6"></table>
+    </div>
+</div>
+</div>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+
+<script src="../layui/layui.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/Ajax.js"></script>
+<!-- 给每个特征标签绑定事件 -->
+
+<script>
+layui.use(['element', 'layer', 'table'], function(){
+  var element = layui.element;
+  var layer = layui.layer;
+  var table = layui.table;
+  
+  //监听折叠
+  element.on('collapse(test)', function(data){
+    // layer.msg('展开状态：'+ data.show);
+    console.log(data.show);
+    console.log(data.title[0].innerText);
+    if(data.show && data.title[0].innerText.indexOf('zipFile')!=-1){
+        table.render({
+        elem: '#demo1'
+        ,skin: 'line' //表格风格
+        ,height: 300
+        ,url: 'http://122.51.255.207:8000/getStaticFiles'
+        ,method: 'POST'
+        ,where: {folder: 'zipFile'} // 请求的另外参数
+        ,contentType: 'application/json' // POST请求一定要指明是json格式的数据
+        ,request: {
+            pageName: 'page' //页码的参数名称，默认：page
+            ,limitName: 'limit' //每页数据量的参数名，默认：limit
+        }
+        // ,even: true
+        ,page: true //是否显示分页
+        ,limits: [10, 20, 30]
+        ,cols: [[ //标题栏
+            {field: 'filename', title: '文件名', width: 120}
+            ,{field: 'size', title: '文件大小', width: 120}
+            ,{field: 'createdTime', title: '创建时间', minWidth: 150}
+            ,{field: 'modifiedTime', title: '修改时间', minWidth: 150}
+            ,{field: 'status', title: '状态', width: 180}
+            ,{fixed: 'right', align: 'center', toolbar: '#barDemo'}
+        ]]
+        //,limit: 5 //每页默认显示的数量
+    });
+    }else if(data.show && data.title[0].innerText.indexOf('zipfile-crypto')!=-1){
+        table.render({
+        elem: '#demo2'
+        ,skin: 'line' //表格风格
+        ,height: 300
+        ,url: 'http://122.51.255.207:8080/getStaticFiles'
+        ,method: 'POST'
+        ,where: {folder: 'zipFile'} // 请求的另外参数
+        ,contentType: 'application/json' // POST请求一定要指明是json格式的数据
+        ,request: {
+            pageName: 'page' //页码的参数名称，默认：page
+            ,limitName: 'limit' //每页数据量的参数名，默认：limit
+        }
+        // ,even: true
+        ,page: true //是否显示分页
+        ,limits: [10, 20, 30]
+        ,cols: [[ //标题栏
+            {field: 'filename', title: '文件名', width: 120}
+            ,{field: 'size', title: '文件大小', width: 120}
+            ,{field: 'createdTime', title: '创建时间', minWidth: 150}
+            ,{field: 'modifiedTime', title: '修改时间', minWidth: 150}
+            ,{field: 'status', title: '状态', width: 180}
+            ,{fixed: 'right', align: 'center', toolbar: '#barDemo'}
+        ]]
+        //,limit: 5 //每页默认显示的数量
+    });
+    }else if(data.show && data.title[0].innerText.indexOf('features')!=-1){
+        table.render({
+        elem: '#demo3'
+        ,skin: 'line' //表格风格
+        ,height: 300
+        ,url: 'http://122.51.255.207:8000/getStaticFiles'
+        ,method: 'POST'
+        ,where: {folder: 'features'} // 请求的另外参数
+        ,contentType: 'application/json' // POST请求一定要指明是json格式的数据
+        ,request: {
+            pageName: 'page' //页码的参数名称，默认：page
+            ,limitName: 'limit' //每页数据量的参数名，默认：limit
+        }
+        // ,even: true
+        ,page: true //是否显示分页
+        ,limits: [10, 20, 30]
+        ,cols: [[ //标题栏
+            {field: 'filename', title: '文件名', width: 120}
+            ,{field: 'size', title: '文件大小', width: 120}
+            ,{field: 'createdTime', title: '创建时间', minWidth: 150}
+            ,{field: 'modifiedTime', title: '修改时间', minWidth: 150}
+            ,{field: 'status', title: '状态', width: 180}
+            ,{fixed: 'right', align: 'center', toolbar: '#barDemo'}
+        ]]
+        //,limit: 5 //每页默认显示的数量
+    });
+    }else if(data.show && data.title[0].innerText.indexOf('FeaturesGenerate')!=-1){
+        table.render({
+        elem: '#demo4'
+        ,skin: 'line' //表格风格
+        ,height: 300
+        ,url: 'http://122.51.255.207:8000/getStaticFiles'
+        ,method: 'POST'
+        ,where: {folder: 'FeaturesGenerate'} // 请求的另外参数
+        ,contentType: 'application/json' // POST请求一定要指明是json格式的数据
+        ,request: {
+            pageName: 'page' //页码的参数名称，默认：page
+            ,limitName: 'limit' //每页数据量的参数名，默认：limit
+        }
+        // ,even: true
+        ,page: true //是否显示分页
+        ,limits: [10, 20, 30]
+        ,cols: [[ //标题栏
+            {field: 'filename', title: '文件名', width: 120}
+            ,{field: 'size', title: '文件大小', width: 120}
+            ,{field: 'createdTime', title: '创建时间', minWidth: 150}
+            ,{field: 'modifiedTime', title: '修改时间', minWidth: 150}
+            ,{field: 'status', title: '状态', width: 180}
+            ,{fixed: 'right', align: 'center', toolbar: '#barDemo'}
+        ]]
+        //,limit: 5 //每页默认显示的数量
+    });
+    }else if(data.show && data.title[0].innerText.indexOf('singlefile')!=-1){
+        table.render({
+        elem: '#demo5'
+        ,skin: 'line' //表格风格
+        ,height: 300
+        ,url: 'http://122.51.255.207:8000/getStaticFiles'
+        ,method: 'POST'
+        ,where: {folder: 'singlefile'} // 请求的另外参数
+        ,contentType: 'application/json' // POST请求一定要指明是json格式的数据
+        ,request: {
+            pageName: 'page' //页码的参数名称，默认：page
+            ,limitName: 'limit' //每页数据量的参数名，默认：limit
+        }
+        // ,even: true
+        ,page: true //是否显示分页
+        ,limits: [10, 20, 30]
+        ,cols: [[ //标题栏
+            {field: 'filename', title: '文件名', width: 120}
+            ,{field: 'size', title: '文件大小', width: 120}
+            ,{field: 'createdTime', title: '创建时间', minWidth: 150}
+            ,{field: 'modifiedTime', title: '修改时间', minWidth: 150}
+            ,{field: 'status', title: '状态', width: 180}
+            ,{fixed: 'right', align: 'center', toolbar: '#barDemo'}
+        ]]
+        //,limit: 5 //每页默认显示的数量
+    });
+    }else if(data.show && data.title[0].innerText.indexOf('trainModelFile')!=-1){
+        table.render({
+        elem: '#demo6'
+        ,skin: 'line' //表格风格
+        ,height: 300
+        ,url: 'http://122.51.255.207:8080/getStaticFiles'
+        ,method: 'POST'
+        ,where: {folder: 'trainModelFile'} // 请求的另外参数
+        ,contentType: 'application/json' // POST请求一定要指明是json格式的数据
+        ,request: {
+            pageName: 'page' //页码的参数名称，默认：page
+            ,limitName: 'limit' //每页数据量的参数名，默认：limit
+        }
+        // ,even: true
+        ,page: true //是否显示分页
+        ,limits: [10, 20, 30]
+        ,cols: [[ //标题栏
+            {field: 'filename', title: '文件名', width: 120}
+            ,{field: 'size', title: '文件大小', width: 120}
+            ,{field: 'createdTime', title: '创建时间', minWidth: 150}
+            ,{field: 'modifiedTime', title: '修改时间', minWidth: 150}
+            ,{field: 'status', title: '状态', width: 180}
+            ,{fixed: 'right', align: 'center', toolbar: '#barDemo'}
+        ]]
+        //,limit: 5 //每页默认显示的数量
+    });
+    }
+
+  });
+
+  table.on('tool(test1)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+       if (layEvent === 'del') { //删除
+        // console.log(data['filename']);
+        var filename = data['filename'];
+        var status = data['status'];
+        var Data = {filename: filename, status: status};
+        Data = JSON.stringify(Data);
+        var url = 'http://122.51.255.207:8000/delStaticFile';
+        var msgdata = Ajax(Data, url, 'POST');
+        if(msgdata['msg']==='success'){
+            alert('删除成功！');
+            location.reload();
+        }else if(msgdata['msg']==='error'){
+            alert('文件已被删除，请勿重复操作！');
+            location.reload();
+        }
+    }
+    });
+
+    table.on('tool(test2)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+       if (layEvent === 'del') { //删除
+        // console.log(data['filename']);
+        var filename = data['filename'];
+        var status = data['status'];
+        var Data = {filename: filename, status: status};
+        Data = JSON.stringify(Data);
+        var url = 'http://122.51.255.207:8080/delStaticFile';
+        var msgdata = Ajax(Data, url, 'POST');
+        if(msgdata['msg']==='success'){
+            alert('删除成功！');
+            location.reload();
+        }else if(msgdata['msg']==='error'){
+            alert('文件已被删除，请勿重复操作！');
+            location.reload();
+        }
+    }
+    });
+
+    table.on('tool(test3)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+       if (layEvent === 'del') { //删除
+        // console.log(data['filename']);
+        var filename = data['filename'];
+        var status = data['status'];
+        var Data = {filename: filename, status: status};
+        Data = JSON.stringify(Data);
+        var url = 'http://122.51.255.207:8000/delStaticFile';
+        var msgdata = Ajax(Data, url, 'POST');
+        if(msgdata['msg']==='success'){
+            alert('删除成功！');
+            location.reload();
+        }else if(msgdata['msg']==='error'){
+            alert('文件已被删除，请勿重复操作！');
+            location.reload();
+        }
+    }
+    });
+
+    table.on('tool(test4)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+       if (layEvent === 'del') { //删除
+        // console.log(data['filename']);
+        var filename = data['filename'];
+        var status = data['status'];
+        var Data = {filename: filename, status: status};
+        Data = JSON.stringify(Data);
+        var url = 'http://122.51.255.207:8000/delStaticFile';
+        var msgdata = Ajax(Data, url, 'POST');
+        if(msgdata['msg']==='success'){
+            alert('删除成功！');
+            location.reload();
+        }else if(msgdata['msg']==='error'){
+            alert('文件已被删除，请勿重复操作！');
+            location.reload();
+        }
+    }
+    });
+
+    table.on('tool(test5)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+       if (layEvent === 'del') { //删除
+        // console.log(data['filename']);
+        var filename = data['filename'];
+        var status = data['status'];
+        var Data = {filename: filename, status: status};
+        Data = JSON.stringify(Data);
+        var url = 'http://122.51.255.207:8000/delStaticFile';
+        var msgdata = Ajax(Data, url, 'POST');
+        if(msgdata['msg']==='success'){
+            alert('删除成功！');
+            location.reload();
+        }else if(msgdata['msg']==='error'){
+            alert('文件已被删除，请勿重复操作！');
+            location.reload();
+        }
+    }
+    });
+
+    table.on('tool(test6)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+        var data = obj.data; //获得当前行数据
+        var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+        var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+       if (layEvent === 'del') { //删除
+        // console.log(data['filename']);
+        var filename = data['filename'];
+        var status = data['status'];
+        var Data = {filename: filename, status: status};
+        Data = JSON.stringify(Data);
+        var url = 'http://122.51.255.207:8080/delStaticFile';
+        var msgdata = Ajax(Data, url, 'POST');
+        if(msgdata['msg']==='success'){
+            alert('删除成功！');
+            location.reload();
+        }else if(msgdata['msg']==='error'){
+            alert('文件已被删除，请勿重复操作！');
+            location.reload();
+        }
+    }
+    });
+
+});
+</script>
+
+<script>
+$(function () {
+    $(".itemWrapper").on("click", function (dom) {
+        //这个dom对象里包括了当前点击的对象值
+        // console.log($(dom.currentTarget).text());
+        
+        // 获取当前dom对象域的文本内容
+        var str = dom.currentTarget.innerText;
+        // console.log(str);
+        // console.log(str.indexOf('User'));
+        var userdegree = window.sessionStorage.getItem('userdegree');
+        // 说明用户点击的是日志板块
+        if(str.indexOf('Log')!=-1){
+            // 如果不是系统顶级用户就没有权限查看
+            if(userdegree!=='Advanced' && userdegree!=='Medium'){
+                alert('Permission Deny!');
+            }else{
+                console.log('查看日志板块！');
+                location.href = 'consoleLog.html';
+            }
+        }
+        // 说明点击的是用户管理板块
+        else if(str.indexOf('User')!=-1){
+            if(userdegree!=='Advanced'){
+                alert('Permission Deny!');
+            }else{
+                console.log('查看用户管理板块！');
+                location.href = 'UserManagement.html';
+                // history.pushState("", "", "file:///D:/githubfile/layuiAdmin/index.html#/")
+            }
+        }
+        // 说明点击的是系统管理板块
+        else if(str.indexOf('System')!=-1){
+            if(userdegree!=='Advanced'){
+                alert('Permission Deny!');
+            }else{
+                console.log('查看系统管理板块！');
+                location.href = 'SystemManagement.html';
+            }
+        }
+        // 说明点击的是帮助板块
+        else if(str.indexOf('Help')!=-1){
+            console.log('查看帮助板块！');
+            location.href = 'Help.html';
+        }
+    })
+});
+</script>
+</body>
+</html>

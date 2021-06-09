@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>layuiAdmin</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<!-- <form class="layui-form">
+    <label>城市</label>
+    <div class="layui-input-inline">
+        <select name="city">
+            <option value=""></option>
+            <option value="0">北京</option>
+            <option value="1">上海</option>
+            <option value="2">广州</option>
+            <option value="3">深圳</option>
+            <option value="4">杭州</option>
+        </select>
+    </div>
+    <div class="layui-input-inline">
+        <button class="layui-btn layui-btn-sm" lay-submit lay-filter="formSearch">搜索</button>
+    </div>
+</form> -->
+
+<blockquote class="layui-elem-quote" style="height: 15px;">
+    <p style="color:teal; font-size: 20px; font-weight: 550;">分类记录查看</p>
+  </blockquote>
+
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+      <!-- <label class="layui-form-label">搜索框</label> -->
+      <div class="layui-row">
+        <div class="layui-col-md5 layui-col-md-offset3">
+            <input type="text" name="title" lay-verify="required" placeholder="搜索" class="layui-input">
+        </div>
+        <div class="layui-col-md3">
+            <button type="button" lay-submit="" class="layui-icon layui-icon-search" lay-filter="demo1" style="background-color: #516ef3; margin-left: 10px; font-size: 30px; color: #dfe5e9;"></button>         
+        </div>
+      </div>
+    </div>
+
+</form>
+
+<table id="demo" lay-filter="test"></table>
+</body>
+</html>
+<!--顶部操作栏-->
+<!-- <script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+        <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
+    </div>
+</script> -->
+<!--每条数据的操作栏-->
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/html" id="editDialog">
+    <form class="layui-form" action="" style="padding: 20px;" id="editDialogForm">
+        <div class="layui-form-item">
+            <label class="layui-form-label">执行管理员</label>
+            <div class="layui-input-inline">
+                <input type="text" name="admin" placeholder="请输入管理员名称" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">文件名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="fileName" placeholder="请输入文件名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">文件大小</label>
+            <div class="layui-input-inline">
+                <input type="text" name="size" placeholder="请输入文件大小" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">分类结果</label>
+            <div class="layui-input-inline">
+                <select name="result">
+                    <option value="" select="">请选择分类结果</option>
+                    <option value="DES">DES</option>
+                    <option value="3DES">3DES</option>
+                    <option value="Blowfish">Blowfish</option>
+                    <option value="RC4">RC4</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">置信度</label>
+            <div class="layui-input-inline">
+                <input type="text" name="confidence" placeholder="请输入分类置信度" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="datetime" placeholder="请输入时间" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+    </form>
+</script>
+<script src="../js/jquery.min.js"></script>
+<!-- <script src="../layui/layui.all.js"></script> -->
+<script src="../layui/layui.js" charset="utf-8"></script>
+<script src="../js/common.js"></script>
+<script src="../js/Ajax.js"></script>
+<script>
+    layuiModules=['table', 'layer','form'];
+
+    function mounted() {
+        //第一个实例
+        table.render({
+            elem: '#demo'
+            // , toolbar: '#toolbarDemo'
+            // , toolbar: true
+            , id: 'test'
+            , height: 400
+            , limits: [10, 20, 30]
+            // , defaultToolbar: []
+            // , url: 'tableDemo.json'  这里url请求不能请求本地数据，必须按照请求规定跨域协议的http服务器
+            //  不然的话会触发CORS policy问题
+            , url: 'http://122.51.255.207:8000/ClassifyRecords' //数据接口
+            ,request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                ,limitName: 'limit' //每页数据量的参数名，默认：limit
+            }
+            // , where: {}  可通过where来指定接口的参数
+            , page: true //开启分页
+            // , even: true
+            , skin: 'line'
+            , cols: [[ //表头
+                // {field: 'id', title: 'ID', width: 68, sort: true}
+                {field: 'admin', title: '执行管理员', width: 110}
+                , {field: 'fileName', title: '文件名', width: 150}
+                , {field: 'size', title: '文件大小', width: 120, sort: true}
+                , {field: 'result', title: '分类结果', width: 100}
+                , {field: 'status', title: '状态', width: 100}
+                , {field: 'confidence', title: '置信度', width: 120, sort: true}
+                , {field: 'datetime', title: '时间', width: 200, sort: true}
+                , {fixed: 'right', align: 'center', toolbar: '#barDemo'} //这里的toolbar值是模板元素的选择器
+            ]]
+        });
+
+        //监听工具条
+        table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            var userdegree = window.sessionStorage.getItem('userdegree');
+
+            if (layEvent === 'del') { //删除
+                if(userdegree==='Junior'){
+                    alert('Permission Deny!')
+                }else{
+                    layer.confirm('确定删除？', function (index) {
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    layer.close(index);
+                    //向服务端发送删除指令
+                    var Data = {id: obj['data']['id']};
+                    Data = JSON.stringify(Data);
+                    var url = 'http://122.51.255.207:8000/deleteClassifyRecord';
+                    msgdata = Ajax(Data, url, 'POST');
+                    if(msgdata['msg']==='success'){
+                        alert('删除成功！');
+                    }else{
+                        alert('删除失败！');
+                    }
+                });
+                }
+            } else if (layEvent === 'edit') { //编辑
+                //do something
+                if(userdegree==='Junior'){
+                    alert('Permission Deny!')
+                }else{
+                    layer.open({
+                    type: 1,
+                    title: '编辑',
+                    area:['50%','70%'],
+                    content: $('#editDialog').html(), //这里content是一个普通的String
+                    btn: ['确定', '取消'],
+                    success: function (index, layero) {
+                        // 不进行render渲染的话下拉框没法刷新出来
+                        form.render();
+                        // form.val("editDialogForm",data);
+                    },
+                    yes: function (index, layero) {
+                        var formData = formArray2Data($('#editDialogForm').serializeArray());
+                        console.log(formData);
+                        if(formData['admin']===""&&formData['confidence']===""&&formData['datetime']===""
+                        &&formData['fileName']===""&&formData['result']===""&&formData['size']===""){
+                            alert('表单不可全为空！');
+                        }else{
+                            formData['id'] = obj['data']['id'];
+                            var Data = JSON.stringify(formData);
+                            console.log(Data);
+                            var url = 'http://122.51.255.207:8000/editClassifyRecord'
+                            var msgdata = Ajax(Data, url, 'POST');
+                            if(msgdata['msg']==='success'){
+                                alert('修改成功！');
+                                location.reload();
+                            }else{
+                                alert('修改失败');
+                            }
+                            layer.close(index);
+                        }
+                    },
+                    btn2: function (index, layero) {
+                        //return false 开启该代码可禁止点击该按钮关闭
+                    }
+                });
+                }
+
+                //同步更新缓存对应的值
+                obj.update({
+                    username: '123'
+                    , title: 'xxx'
+                });
+            }
+        });
+};
+</script>
+<script src="../js/Ajax.js"></script>
+<script>
+layui.use(['form'], function(){
+    var form = layui.form;
+
+    form.on('submit(demo1)', function(data){
+        // layer.alert(JSON.stringify(data.field), {
+        //   title: '提交的信息'
+        // })
+        console.log(data.field);
+        Data = {title: data.field['title']};
+        Url = "http://122.51.255.207:8000/selectClassifyRecords";
+        var msgdata = Ajax(Data, Url, 'GET');
+        msgdata = msgdata['data'];
+
+        table.render({
+            elem: '#demo'
+            // , toolbar: '#toolbarDemo'
+            , id: 'test'
+            , height: 400
+            , defaultToolbar: []
+            // , url: 'tableDemo.json'  这里url请求不能请求本地数据，必须按照请求规定跨域协议的http服务器
+            //  不然的话会触发CORS policy问题
+            , data: msgdata
+            , page: true //开启分页
+            // , even: true
+            , skin: 'line'
+            , cols: [[ //表头
+                // {field: 'id', title: 'ID', width: 68, sort: true}
+                {field: 'admin', title: '执行管理员', width: 110}
+                , {field: 'fileName', title: '文件名', width: 150}
+                , {field: 'size', title: '文件大小', width: 120, sort: true}
+                , {field: 'result', title: '分类结果', width: 100}
+                , {field: 'status', title: '状态', width: 100}
+                , {field: 'confidence', title: '置信度', width: 120, sort: true}
+                , {field: 'datetime', title: '时间', width: 200, sort: true}
+                , {fixed: 'right', align: 'center', toolbar: '#barDemo'} //这里的toolbar值是模板元素的选择器
+            ]]
+        });
+
+        return true;
+    });
+})
+</script>

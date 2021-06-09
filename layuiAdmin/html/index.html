@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Layui</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="../layui/css/layui.css"  media="all">
+  <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body>
+
+<div class="layui-fluid">
+  <form class="layui-form layui-form-pane" action="" lay-filter="example">
+
+    <div class="layui-row layui-col-space30">
+      <div class="layui-col-md5">
+        <div class="layui-form-item layui-form-text">
+          <label class="layui-form-label" style="width: 420px;">明文</label>
+          <div class="layui-input-block">
+            <textarea name="Plaintext" placeholder="" class="layui-textarea" style="height: 450px; width: 420px;"></textarea>
+          </div>
+        </div>  
+        <!-- <textarea placeholder="明文" class="layui-textarea" style="height: 450px; width: 400px;"></textarea> -->
+      </div>
+
+      <div class="layui-col-md2">
+        <div class="layui-input-inline" style="width: 160px; margin-top: 80px;">
+          <select name="EncryptionAlgorithm" lay-filter="Category">
+            <option value="">加密算法</option>
+            <option value="DES">DES</option>
+            <option value="3DES">3DES</option>
+            <option value="AES">AES</option>
+            <option value="Blowfish">Blowfish</option>
+            <option value="RC4">RC4</option>
+            <option value="RSA">RSA</option>
+            <option value="MD5">MD5</option>
+            <option value="SHA-1">SHA-1</option>
+            <option value="SHA-512">SHA-512</option>
+          </select>
+        </div>
+
+        <div class="layui-input-inline" style="width: 160px; margin-top: 50px;">
+          <input type="text" name="password" placeholder="密码" class="layui-input">
+        </div>
+
+        <div class="layui-input-inline" style="width: 160px; margin-top: 50px;">
+          <button type="button" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="demo1">加密&gt;</button>
+        </div>
+
+        <div class="layui-input-inline" style="width: 160px; margin-top: 20px;">
+          <button type="button" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="demo2">&lt;解密</button>
+        </div>
+      </div>
+          
+      <div class="layui-col-md5">
+        <div class="layui-form-item layui-form-text">
+          <label class="layui-form-label" style="width: 420px;">密文</label>
+          <div class="layui-input-block">
+            <textarea id="txt" name="Ciphertext" placeholder="" class="layui-textarea" style="height: 450px; width: 420px;"></textarea>
+          </div>
+        </div>
+        <!-- <textarea placeholder="密文" class="layui-textarea" style="height: 450px; width: 400px;"></textarea> -->
+      </div>
+      
+    </div>
+  
+  </form>
+</div> 
+
+<script src="../layui/layui.js" charset="utf-8"></script>
+<script src="../js/jquery.min.js"></script>
+<!-- 导入ajax请求封装函数 -->
+<script src="../js/Ajax.js"></script>
+<script>
+  layui.use(['form', 'layer', 'layedit'], function(){
+    var form = layui.form
+    ,layer = layui.layer
+    ,layedit = layui.layedit
+  
+    // 监听加密事件按钮
+    form.on('submit(demo1)', function(data){
+      // layer.alert(JSON.stringify(data.field), {
+      //   title: '提交的信息'
+      // })
+      console.log(data.field);
+      if(data.field['EncryptionAlgorithm']===""){
+        layer.alert('请指定加密算法', {
+        title: '提示'
+      })
+      return false;
+      }
+      else if(data.field['Plaintext']===""){
+        layer.alert('请输入明文', {
+        title: '提示'
+      })
+      return false;
+      }
+      Data = {
+        Algorithm: data.field['EncryptionAlgorithm'], 
+        PassWord: data.field['password'],
+        Text: data.field['Plaintext'],
+        event: 'encryption'
+      };
+      Url = "http://122.51.255.207:8000/encryption";
+      var msgdata = Ajax(Data, Url, 'GET');
+      console.log(msgdata);
+      if(msgdata['msg']==='false'){
+        alert(msgdata['data']);
+        return false;
+      }
+      document.getElementsByName("Ciphertext")[0].value = msgdata['data'];
+      // form.render();
+  
+      return false;
+    });
+
+
+    // 监听解密事件按钮
+    form.on('submit(demo2)', function(data){
+
+      if(data.field['EncryptionAlgorithm']===""){
+        layer.alert('请指定加密算法', {
+        title: '提示'
+      })
+      return false;
+      }
+      else if(data.field['Ciphertext']===""){
+        layer.alert('请输入密文', {
+        title: '提示'
+      })
+      return false;
+      }
+      Data = {
+        Algorithm: data.field['EncryptionAlgorithm'], 
+        PassWord: data.field['password'],
+        Text: data.field['Ciphertext'],
+        event: 'decryption'
+      };
+      Url = "http://122.51.255.207:8000/encryption";
+      var msgdata = Ajax(Data, Url, 'GET');
+      console.log(msgdata);
+      // 如果后端给出false的msg信息，说明加密/解密过程出错，失败
+      if(msgdata['msg']==='false'){
+        alert(msgdata['data']);
+        return false;
+      }
+      document.getElementsByName("Plaintext")[0].value = msgdata['data'];
+      // form.render();
+  
+      return false;
+    })
+
+
+    form.on('select(Category)', function(data){
+      var inputArea=document.getElementsByName("password")[0];
+      var buttonArea = document.getElementsByClassName("layui-btn layui-btn-radius")[1];
+      //  $('#Algorithm').empty() , 最后一定要用form.render('select')进行刷新渲染
+      switch(data.value){
+        case "":
+        inputArea.placeholder="密码";
+        inputArea.removeAttribute('disabled');
+        buttonArea.style.display="block";
+        break;
+        case "DES":
+        inputArea.placeholder="请输入8位密码";
+        inputArea.removeAttribute('disabled');
+        buttonArea.style.display="block";
+        break;
+        case "3DES":
+        inputArea.placeholder="请输入16/24位密码";
+        inputArea.removeAttribute('disabled');
+        buttonArea.style.display="block";
+        break;
+        case "AES":
+        inputArea.placeholder="请输入16/24/32位密码";
+        inputArea.removeAttribute('disabled');
+        buttonArea.style.display="block";
+        break;
+        case "Blowfish":
+        inputArea.placeholder="请输入4-56位密码";
+        inputArea.removeAttribute('disabled');
+        buttonArea.style.display="block";
+        break;
+        case "RC4":
+        inputArea.placeholder="请输入5-256位密码";
+        inputArea.removeAttribute('disabled');
+        buttonArea.style.display="block";
+        break;
+        case "RSA":
+        inputArea.value="";
+        inputArea.placeholder="公钥/私钥(取默认值)";
+        inputArea.setAttribute('disabled', 'disabled');
+        buttonArea.style.display="block";
+        break;
+        case "MD5":
+        inputArea.value="";
+        inputArea.placeholder="密码(无效)";
+        inputArea.setAttribute('disabled', 'disabled');
+        buttonArea.style.display="none";
+        break;
+        case "SHA-1":
+        inputArea.value="";
+        inputArea.placeholder="密码(无效)";
+        inputArea.setAttribute('disabled', 'disabled');
+        buttonArea.style.display="none";
+        break;
+        case "SHA-512":
+        inputArea.value="";
+        inputArea.placeholder="密码(无效)";
+        inputArea.setAttribute('disabled', 'disabled');
+        buttonArea.style.display="none";
+        break;
+        default:alert("error");
+      }
+    })
+   
+  });
+</script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+</body>
+</html>

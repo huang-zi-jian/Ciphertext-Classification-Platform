@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>登录系统</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url("image/background_2.jpg");
+            background-size: cover;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-div">
+        <h1>密文分类系统</h1>
+        <form id="login-form" action="#">
+            <div class="login-form-item">
+                <input name="username" placeholder="用户名">
+            </div>
+            <div class="login-form-item">
+                <input name="password" type="password" placeholder="密码">
+            </div>
+            <button class="btn-login" type="submit">登录</button>
+        </form>
+    </div>
+</body>
+
+</html>
+<script src="js/jquery.min.js"></script>
+<script src="layui/layui.all.js"></script>
+<script src="js/common.js"></script>
+<script>
+
+    layuiModules = ['layer', 'form'];
+
+    function mounted() {
+        $('#login-form').submit(function () {
+            var username = document.getElementsByName("username")[0].value;
+            var password = document.getElementsByName("password")[0].value;
+            if(username===""||password===""){
+                alert('用户名密码不能为空！');
+                return false;
+            }
+            var logindata = {};
+            logindata['username'] = username;
+            logindata['password'] = password;
+            // xhr.send("username="+username+"&password="+password);
+            logindata = JSON.stringify(logindata);
+
+            $.ajax({
+                url: "http://122.51.255.207:8000/login",
+                data: logindata,
+                method: 'POST',
+                async: true,
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function(msg){
+                    // console.log(typeof msg);
+                    // console.log(msg['msg']);
+                    if(msg['msg']){
+                        var store = window.sessionStorage;
+                        store.setItem('username', username);
+                        store.setItem('userdegree', msg['degree']);
+                        alert('登录成功！');
+                        location.href = 'index.html';
+                    }
+                    else{
+                        alert('用户名或密码错误');
+                    }
+                },
+                error: function(msg){
+                    // console.log(typeof msg);
+                    // console.log(msg['msg']);
+                    alert('请求失败！');
+                }
+
+            })
+            /*
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST","http://127.0.0.1:8000/",true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            var username = document.getElementsByName("username")[0].value;
+            var password = document.getElementsByName("password")[0].value;
+            var data = {};
+            data['username'] = username;
+            data['password'] = password;
+            // xhr.send("username="+username+"&password="+password);
+            xhr.send(JSON.stringify(data));
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState === 4){
+                    if(xhr.status >=200 && xhr.status < 300 || xhr.status === 304){
+                        alert('登录成功！');
+                    }else{
+                        alert('登录失败！');
+                    }
+                }
+            }
+            // location.href = "index.html";
+            return false;
+            */
+            return false;
+        })
+    }
+
+</script>

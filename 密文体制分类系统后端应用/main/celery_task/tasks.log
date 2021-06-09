@@ -1,0 +1,202 @@
+nohup: ignoring input
+ 
+ -------------- celery@bruce_worker-1 v5.0.5 (singularity)
+--- ***** ----- 
+-- ******* ---- Linux-4.15.0-88-generic-x86_64-with-Ubuntu-18.04-bionic 2021-05-18 22:29:52
+- *** --- * --- 
+- ** ---------- [config]
+- ** ---------- .> app:         celeryTasks:0x7f39dc145e10
+- ** ---------- .> transport:   redis://:**@122.51.255.207:6379/0
+- ** ---------- .> results:     redis://:**@122.51.255.207:6379/1
+- *** --- * --- .> concurrency: 4 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** ----- 
+ -------------- [queues]
+                .> capture_celery   exchange=capture_celery(direct) key=capture_celery
+                .> features_celery  exchange=features_celery(direct) key=features_celery
+
+[tasks]
+  . celeryTasks.features_Generate
+  . celeryTasks.netpackage_capture
+  . main.celery_task.celeryTasks.features_Generate
+  . main.celery_task.celeryTasks.netpackage_capture
+
+/home/ubuntu/.local/lib/python3.6/site-packages/celery/platforms.py:797: RuntimeWarning: You're running the worker with superuser privileges: this is
+absolutely not recommended!
+
+Please specify a different user using the --uid option.
+
+User information: uid=0 euid=0 gid=0 egid=0
+
+  uid=uid, euid=euid, gid=gid, egid=egid,
+[2021-05-18 22:29:52,114: WARNING/MainProcess] /home/ubuntu/.local/lib/python3.6/site-packages/celery/app/utils.py:206: CDeprecationWarning: 
+    The 'CELERY_RESULT_SERIALIZER' setting is deprecated and scheduled for removal in
+    version 6.0.0. Use the result_serializer instead
+
+  alternative=f'Use the {_TO_NEW_KEY[setting]} instead')
+
+[2021-05-18 22:29:52,114: WARNING/MainProcess] /home/ubuntu/.local/lib/python3.6/site-packages/celery/app/utils.py:206: CDeprecationWarning: 
+    The 'CELERY_ACKS_LATE' setting is deprecated and scheduled for removal in
+    version 6.0.0. Use the task_acks_late instead
+
+  alternative=f'Use the {_TO_NEW_KEY[setting]} instead')
+
+[2021-05-18 22:29:52,114: WARNING/MainProcess] /home/ubuntu/.local/lib/python3.6/site-packages/celery/app/utils.py:206: CDeprecationWarning: 
+    The 'CELERY_RESULT_BACKEND' setting is deprecated and scheduled for removal in
+    version 6.0.0. Use the result_backend instead
+
+  alternative=f'Use the {_TO_NEW_KEY[setting]} instead')
+
+[2021-05-18 22:29:52,115: WARNING/MainProcess] /home/ubuntu/.local/lib/python3.6/site-packages/celery/app/utils.py:206: CDeprecationWarning: 
+    The 'CELERY_DISABLE_RATE_LIMITS' setting is deprecated and scheduled for removal in
+    version 6.0.0. Use the worker_disable_rate_limits instead
+
+  alternative=f'Use the {_TO_NEW_KEY[setting]} instead')
+
+[2021-05-18 22:29:52,115: WARNING/MainProcess] /home/ubuntu/.local/lib/python3.6/site-packages/celery/app/utils.py:206: CDeprecationWarning: 
+    The 'CELERY_TASK_SERIALIZER' setting is deprecated and scheduled for removal in
+    version 6.0.0. Use the task_serializer instead
+
+  alternative=f'Use the {_TO_NEW_KEY[setting]} instead')
+
+[2021-05-18 22:29:52,115: WARNING/MainProcess] /home/ubuntu/.local/lib/python3.6/site-packages/celery/app/utils.py:206: CDeprecationWarning: 
+    The 'CELERY_TIMEZONE' setting is deprecated and scheduled for removal in
+    version 6.0.0. Use the timezone instead
+
+  alternative=f'Use the {_TO_NEW_KEY[setting]} instead')
+
+[2021-05-18 22:29:52,115: WARNING/MainProcess] /home/ubuntu/.local/lib/python3.6/site-packages/celery/app/utils.py:206: CDeprecationWarning: 
+    The 'CELERY_ROUTES' setting is deprecated and scheduled for removal in
+    version 6.0.0. Use the task_routes instead
+
+  alternative=f'Use the {_TO_NEW_KEY[setting]} instead')
+
+[2021-05-18 22:29:52,115: WARNING/MainProcess] /home/ubuntu/.local/lib/python3.6/site-packages/celery/app/utils.py:206: CDeprecationWarning: 
+    The 'CELERY_IMPORTS' setting is deprecated and scheduled for removal in
+    version 6.0.0. Use the imports instead
+
+  alternative=f'Use the {_TO_NEW_KEY[setting]} instead')
+
+[2021-05-18 22:29:52,115: WARNING/MainProcess] /home/ubuntu/.local/lib/python3.6/site-packages/celery/app/utils.py:206: CDeprecationWarning: 
+    The 'CELERYD_PREFETCH_MULTIPLIER' setting is deprecated and scheduled for removal in
+    version 6.0.0. Use the worker_prefetch_multiplier instead
+
+  alternative=f'Use the {_TO_NEW_KEY[setting]} instead')
+
+[2021-05-18 22:29:52,115: WARNING/MainProcess] /home/ubuntu/.local/lib/python3.6/site-packages/celery/app/utils.py:206: CDeprecationWarning: 
+    The 'CELERY_ACCEPT_CONTENT' setting is deprecated and scheduled for removal in
+    version 6.0.0. Use the accept_content instead
+
+  alternative=f'Use the {_TO_NEW_KEY[setting]} instead')
+
+[2021-05-18 22:29:52,115: WARNING/MainProcess] /home/ubuntu/.local/lib/python3.6/site-packages/celery/app/utils.py:206: CDeprecationWarning: 
+    The 'CELERY_QUEUES' setting is deprecated and scheduled for removal in
+    version 6.0.0. Use the task_queues instead
+
+  alternative=f'Use the {_TO_NEW_KEY[setting]} instead')
+
+[2021-05-18 22:29:52,115: WARNING/MainProcess] /home/ubuntu/.local/lib/python3.6/site-packages/celery/app/utils.py:206: CDeprecationWarning: 
+    The 'BROKER_URL' setting is deprecated and scheduled for removal in
+    version 6.0.0. Use the broker_url instead
+
+  alternative=f'Use the {_TO_NEW_KEY[setting]} instead')
+
+[2021-05-18 22:29:52,115: WARNING/MainProcess] Please run `celery upgrade settings path/to/settings.py` to avoid these warnings and to allow a smoother upgrade to Celery 6.0.
+[2021-05-18 22:29:52,425: INFO/MainProcess] Connected to redis://:**@122.51.255.207:6379/0
+[2021-05-18 22:29:52,434: INFO/MainProcess] mingle: searching for neighbors
+[2021-05-18 22:29:53,454: INFO/MainProcess] mingle: all alone
+[2021-05-18 22:29:53,468: INFO/MainProcess] celery@bruce_worker-1 ready.
+[2021-05-18 22:30:19,463: INFO/MainProcess] Received task: main.celery_task.celeryTasks.netpackage_capture[b201b45e-dadf-4dd8-a79d-e24f631012ce]  
+[2021-05-18 22:30:19,465: WARNING/ForkPoolWorker-1] 开始抓包
+WARNING: Calling str(pkt) on Python 3 makes no sense!
+[2021-05-18 22:30:19,494: WARNING/ForkPoolWorker-1] Calling str(pkt) on Python 3 makes no sense!
+WARNING: Calling str(pkt) on Python 3 makes no sense!
+[2021-05-18 22:30:19,499: WARNING/ForkPoolWorker-1] Calling str(pkt) on Python 3 makes no sense!
+WARNING: more Calling str(pkt) on Python 3 makes no sense!
+[2021-05-18 22:30:19,509: WARNING/ForkPoolWorker-1] more Calling str(pkt) on Python 3 makes no sense!
+[2021-05-18 22:30:21,246: WARNING/ForkPoolWorker-1] 邮件发送成功
+[2021-05-18 22:30:21,251: INFO/ForkPoolWorker-1] Task main.celery_task.celeryTasks.netpackage_capture[b201b45e-dadf-4dd8-a79d-e24f631012ce] succeeded in 1.7852197596803308s: None
+[2021-05-18 22:39:27,169: INFO/MainProcess] Received task: main.celery_task.celeryTasks.netpackage_capture[2e8f2aaa-495a-47ce-afb7-06fbbef94e8a]  
+[2021-05-18 22:39:27,170: WARNING/ForkPoolWorker-1] 开始抓包
+WARNING: Calling str(pkt) on Python 3 makes no sense!
+[2021-05-18 22:39:27,205: WARNING/ForkPoolWorker-1] Calling str(pkt) on Python 3 makes no sense!
+WARNING: Calling str(pkt) on Python 3 makes no sense!
+[2021-05-18 22:39:27,206: WARNING/ForkPoolWorker-1] Calling str(pkt) on Python 3 makes no sense!
+WARNING: more Calling str(pkt) on Python 3 makes no sense!
+[2021-05-18 22:39:27,207: WARNING/ForkPoolWorker-1] more Calling str(pkt) on Python 3 makes no sense!
+[2021-05-18 22:39:28,061: WARNING/ForkPoolWorker-1] 邮件发送成功
+[2021-05-18 22:39:28,063: INFO/ForkPoolWorker-1] Task main.celery_task.celeryTasks.netpackage_capture[2e8f2aaa-495a-47ce-afb7-06fbbef94e8a] succeeded in 0.8926347838714719s: None
+[2021-05-18 22:39:49,237: INFO/MainProcess] Received task: main.celery_task.celeryTasks.netpackage_capture[7491ef02-1dca-4440-bef8-31d50e76e337]  
+[2021-05-18 22:39:49,238: WARNING/ForkPoolWorker-1] 开始抓包
+WARNING: Calling str(pkt) on Python 3 makes no sense!
+[2021-05-18 22:39:49,277: WARNING/ForkPoolWorker-1] Calling str(pkt) on Python 3 makes no sense!
+WARNING: Calling str(pkt) on Python 3 makes no sense!
+[2021-05-18 22:39:49,279: WARNING/ForkPoolWorker-1] Calling str(pkt) on Python 3 makes no sense!
+WARNING: more Calling str(pkt) on Python 3 makes no sense!
+[2021-05-18 22:39:49,281: WARNING/ForkPoolWorker-1] more Calling str(pkt) on Python 3 makes no sense!
+[2021-05-18 22:39:50,520: WARNING/ForkPoolWorker-1] 邮件发送成功
+[2021-05-18 22:39:50,522: INFO/ForkPoolWorker-1] Task main.celery_task.celeryTasks.netpackage_capture[7491ef02-1dca-4440-bef8-31d50e76e337] succeeded in 1.2839310392737389s: None
+[2021-05-21 13:38:44,322: INFO/MainProcess] Received task: main.celery_task.celeryTasks.netpackage_capture[56ff306d-633a-4d56-b323-0a03a7c93e1a]  
+[2021-05-21 13:38:44,323: WARNING/ForkPoolWorker-1] 开始抓包
+WARNING: Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:44,350: WARNING/ForkPoolWorker-1] Calling str(pkt) on Python 3 makes no sense!
+WARNING: Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:44,351: WARNING/ForkPoolWorker-1] Calling str(pkt) on Python 3 makes no sense!
+WARNING: more Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:44,365: WARNING/ForkPoolWorker-1] more Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:44,377: INFO/MainProcess] Received task: main.celery_task.celeryTasks.netpackage_capture[8cec3340-5f0e-4cc7-a0ce-b172bfda136b]  
+[2021-05-21 13:38:44,378: WARNING/ForkPoolWorker-4] 开始抓包
+WARNING: Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:44,408: WARNING/ForkPoolWorker-4] Calling str(pkt) on Python 3 makes no sense!
+WARNING: Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:44,429: WARNING/ForkPoolWorker-4] Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:44,430: INFO/MainProcess] Received task: main.celery_task.celeryTasks.netpackage_capture[60c6ddc7-9512-4fd3-8634-3828c35dc3f9]  
+WARNING: more Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:44,431: WARNING/ForkPoolWorker-4] more Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:44,432: WARNING/ForkPoolWorker-2] 开始抓包
+WARNING: Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:44,459: WARNING/ForkPoolWorker-2] Calling str(pkt) on Python 3 makes no sense!
+WARNING: Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:44,464: WARNING/ForkPoolWorker-2] Calling str(pkt) on Python 3 makes no sense!
+WARNING: more Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:44,466: WARNING/ForkPoolWorker-2] more Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:44,488: INFO/MainProcess] Received task: main.celery_task.celeryTasks.netpackage_capture[3a92ac24-f00c-4aa4-b09c-6ad2b670203a]  
+[2021-05-21 13:38:44,489: WARNING/ForkPoolWorker-3] 开始抓包
+WARNING: Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:44,515: WARNING/ForkPoolWorker-3] Calling str(pkt) on Python 3 makes no sense!
+WARNING: Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:44,521: WARNING/ForkPoolWorker-3] Calling str(pkt) on Python 3 makes no sense!
+WARNING: more Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:44,522: WARNING/ForkPoolWorker-3] more Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:45,312: WARNING/ForkPoolWorker-3] 邮件发送成功
+[2021-05-21 13:38:45,316: INFO/ForkPoolWorker-3] Task main.celery_task.celeryTasks.netpackage_capture[3a92ac24-f00c-4aa4-b09c-6ad2b670203a] succeeded in 0.8272087126970291s: None
+[2021-05-21 13:38:45,337: WARNING/ForkPoolWorker-4] 邮件发送成功
+[2021-05-21 13:38:45,341: INFO/ForkPoolWorker-4] Task main.celery_task.celeryTasks.netpackage_capture[8cec3340-5f0e-4cc7-a0ce-b172bfda136b] succeeded in 0.9636882431805134s: None
+[2021-05-21 13:38:45,343: INFO/MainProcess] Received task: main.celery_task.celeryTasks.netpackage_capture[1c75b500-092a-42cc-8327-c7d56d299f80]  
+[2021-05-21 13:38:45,344: WARNING/ForkPoolWorker-4] 开始抓包
+[2021-05-21 13:38:45,350: WARNING/ForkPoolWorker-1] 邮件发送成功
+[2021-05-21 13:38:45,351: INFO/ForkPoolWorker-1] Task main.celery_task.celeryTasks.netpackage_capture[56ff306d-633a-4d56-b323-0a03a7c93e1a] succeeded in 1.028287042863667s: None
+[2021-05-21 13:38:45,393: WARNING/ForkPoolWorker-2] 邮件发送成功
+[2021-05-21 13:38:45,397: INFO/ForkPoolWorker-2] Task main.celery_task.celeryTasks.netpackage_capture[60c6ddc7-9512-4fd3-8634-3828c35dc3f9] succeeded in 0.9653211236000061s: None
+[2021-05-21 13:38:46,199: WARNING/ForkPoolWorker-4] 邮件发送成功
+[2021-05-21 13:38:46,201: INFO/ForkPoolWorker-4] Task main.celery_task.celeryTasks.netpackage_capture[1c75b500-092a-42cc-8327-c7d56d299f80] succeeded in 0.857200494967401s: None
+[2021-05-21 13:38:52,570: INFO/MainProcess] Received task: main.celery_task.celeryTasks.netpackage_capture[d04f3884-5f0a-4349-94fb-cd808254f6c5]  
+[2021-05-21 13:38:52,571: WARNING/ForkPoolWorker-1] 开始抓包
+WARNING: Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:52,603: WARNING/ForkPoolWorker-1] Calling str(pkt) on Python 3 makes no sense!
+WARNING: Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:52,613: WARNING/ForkPoolWorker-1] Calling str(pkt) on Python 3 makes no sense!
+WARNING: more Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:52,615: WARNING/ForkPoolWorker-1] more Calling str(pkt) on Python 3 makes no sense!
+[2021-05-21 13:38:53,791: WARNING/ForkPoolWorker-1] 邮件发送成功
+[2021-05-21 13:38:53,793: INFO/ForkPoolWorker-1] Task main.celery_task.celeryTasks.netpackage_capture[d04f3884-5f0a-4349-94fb-cd808254f6c5] succeeded in 1.2222591554746032s: None
+[2021-06-01 13:14:13,418: INFO/MainProcess] Received task: main.celery_task.celeryTasks.netpackage_capture[11d15b9c-e194-4d24-9a88-3d92567b51c4]  
+[2021-06-01 13:14:13,420: WARNING/ForkPoolWorker-1] 开始抓包
+WARNING: Calling str(pkt) on Python 3 makes no sense!
+[2021-06-01 13:14:13,442: WARNING/ForkPoolWorker-1] Calling str(pkt) on Python 3 makes no sense!
+WARNING: Calling str(pkt) on Python 3 makes no sense!
+[2021-06-01 13:14:13,443: WARNING/ForkPoolWorker-1] Calling str(pkt) on Python 3 makes no sense!
+WARNING: more Calling str(pkt) on Python 3 makes no sense!
+[2021-06-01 13:14:13,457: WARNING/ForkPoolWorker-1] more Calling str(pkt) on Python 3 makes no sense!
+[2021-06-01 13:14:15,830: WARNING/ForkPoolWorker-1] 邮件发送成功
+[2021-06-01 13:14:15,832: INFO/ForkPoolWorker-1] Task main.celery_task.celeryTasks.netpackage_capture[11d15b9c-e194-4d24-9a88-3d92567b51c4] succeeded in 2.41252158023417s: None

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>personalCenter</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../layui/css/layui.css"  media="all">
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body>
+<blockquote class="layui-elem-quote" style="height: 15px;">
+    <p style="color:teal; font-size: 20px; font-weight: 550;">个人日志</p>
+</blockquote>
+
+<table class="layui-hide" id="demo"></table>
+                
+<script src="../layui/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script src="../js/jquery.min.js"></script>
+<script>
+layui.use('table', function(){
+    var table = layui.table;
+    var userName = window.sessionStorage.getItem('username');
+    
+    //展示已知数据
+    table.render({
+    elem: '#demo'
+    ,skin: 'line' //表格风格
+    ,height: 400
+    ,url: 'http://122.51.255.207:8000/personalLog'
+    ,method: 'POST'
+    ,where: {username: userName} // 请求的另外参数
+    ,contentType: 'application/json' // POST请求一定要指明是json格式的数据
+    ,request: {
+        pageName: 'page' //页码的参数名称，默认：page
+        ,limitName: 'limit' //每页数据量的参数名，默认：limit
+    }
+    // ,even: true
+    ,page: true //是否显示分页
+    ,limits: [10, 20, 30]
+    ,cols: [[ //标题栏
+        {field: 'username', title: '用户名', width: 150}
+        ,{field: 'logDetail', title: '日志详情', width: 160}
+        ,{field: 'ip', title: 'ip地址', Width: 180}
+        ,{field: 'time', title: '时间', minWidth: 150, sort: true}
+        ,{field: 'status', title: '状态', width: 120}
+    ]]
+
+    //,limit: 5 //每页默认显示的数量
+    });
+});
+</script>
+<!-- 给每个特征标签绑定事件 -->
+<script>
+    $(function () {
+        $(".itemWrapper").on("click", function (dom) {
+        	//这个dom对象里包括了当前点击的对象值
+            // console.log($(dom.currentTarget).text());
+            
+            // 获取当前dom对象域的文本内容
+            var str = dom.currentTarget.innerText;
+            // console.log(str);
+            // console.log(str.indexOf('User'));
+            var username = window.sessionStorage.getItem('username');;
+            // 说明用户点击的是日志板块
+            if(str.indexOf('Log')!=-1){
+                // 如果不是系统顶级用户就没有权限查看
+                if(username!=='feifei'){
+                    alert('Permission Deny!');
+                }else{
+                    console.log('查看日志板块！');
+                }
+            }
+            // 说明点击的是用户管理板块
+            else if(str.indexOf('User')!=-1){
+                if(username!=='feifei'){
+                    alert('Permission Deny!');
+                }else{
+                    console.log('查看用户管理板块！');
+                }
+            }
+            // 说明点击的是系统管理板块
+            else if(str.indexOf('System')!=-1){
+                if(username!=='feifei'){
+                    alert('Permission Deny!');
+                }else{
+                    console.log('查看系统管理板块！');
+                }
+            }
+            // 说明点击的是帮助板块
+            else if(str.indexOf('Help')!=-1){
+                console.log('查看帮助板块！');
+                $('.loading').html($('#editDialog').html());
+                
+            }
+
+        })
+
+    });
+</script>
+</body>
+</html>

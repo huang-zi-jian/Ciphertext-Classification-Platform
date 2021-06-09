@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Ciphertext-Recognition</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="../layui/css/layui.css"  media="all">
+  <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+</head>
+<body>
+<blockquote class="layui-elem-quote">
+  <p style="color:teal; font-size: 20px; font-weight: 550;">密文上传以及参数选取</p>
+</blockquote>
+    
+    <div class="layui-upload">
+        <!-- 可以认为该文件button和一个input部件关联，该input部件name属性值默认为'file' -->
+        <button type="button" class="layui-btn layui-btn-normal" id="test1">选择文件</button>
+        <button type="button" class="layui-btn" id="test2">开始上传</button>
+    </div>
+    <div class="layui-inline layui-word-aux" style="margin-top: 10px;">文件上传大小限制 1.2G（允许上传CSV文件和zip压缩文件）</div>
+    <div class="layui-upload" style="margin-top: 20px;">
+        <button type="button" class="layui-btn layui-btn-radius layui-btn-warm" id="test3">参数选取</button>
+    </div>
+
+
+<blockquote class="layui-elem-quote" style="margin-top: 50px;">
+  <p id="tesultTitle" style="color:teal; font-size: 20px; font-weight: 550;">密文识别结果</p>
+</blockquote>
+
+<table class="layui-hide" id="test"></table>
+
+
+<script src="../layui/layui.js" charset="utf-8"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script src="../js/Ajax.js"></script>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/common.js"></script>
+
+<script>
+    // 将table列表展示封装成函数，每次密文文件上传成功后都会执行此函数来显示密文分类结果列表
+    function tableDisplay(){
+        layui.use(['laypage', 'layer', 'table'], function(){
+        var laypage = layui.laypage
+        ,layer = layui.layer;
+        table = layui.table;
+        
+        table.render({
+        elem: '#test'
+        ,url:'http://122.51.255.207:8080/ReturnCipherResult'
+        ,height: 400
+        ,request: {
+          pageName: 'page' //页码的参数名称，默认：page
+          ,limitName: 'limit' //每页数据量的参数名，默认：limit
+        }
+        ,limits: [10, 20, 30]
+        ,page: true //开启分页
+        ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+        ,cols: [[
+            // {field:'id', width:100, title: 'ID', sort: true}
+            {field:'fileName', width:160, title: '文件名'}
+            ,{field:'size', width:120, title: '文件大小', sort: true}
+            ,{field:'status', title: '状态', width: '30%', minWidth: 100} //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
+            ,{field:'result', title: '分类结果', sort: true}
+            ,{field:'confidence', title: '置信值', sort: true}
+        ]]
+        ,done: function(res){
+          // 回调函数将最近一次分类的时间展示出来
+          var msgdata = Ajax({}, 'http://122.51.255.207:8080/ReturnCiphertime', 'GET');
+          var timeRecord = msgdata['timeRecord'];
+          document.getElementById('tesultTitle').innerHTML = '密文识别结果&emsp;&emsp;&emsp;&emsp;&emsp;ExecutionTime:&emsp;' + timeRecord;
+          // tableDisplay();
+        }
+      });
+    });
+}
+    // 页面第一次开始调用一次函数显示分类结果
+    tableDisplay();
+</script>
+<script>
+layui.use('upload', function(){
+  var $ = layui.jquery
+  ,upload = layui.upload;
+
+  //设定文件大小限制，默认为POST请求
+  upload.render({
+    elem: '#test1'
+    ,url: 'http://122.51.255.207:8080/Ciphertext_file_upload' //改成您自己的上传接口
+    ,auto: false
+    ,bindAction: '#test2'
+    ,size: 1200000 //限制文件大小，单位 KB
+    ,accept: 'file'
+    // ,exts: 'zip|rar|7z'
+    ,exts: 'zip|csv'
+    ,before: function(obj){
+      var userdegree = window.sessionStorage.getItem('userdegree');
+      if(userdegree==='Junior'){
+        alert('Permission Deny!');
+        return false;
+      }else{
+        return true;
+      }
+    }
+    ,done: function(res){
+      layer.msg('上传成功');
+      // var msgdata = Ajax({}, 'http://122.51.255.207:8080/ReturnCiphertime', 'GET');
+      // var timeRecord = msgdata['timeRecord'];
+      // document.getElementById('tesultTitle').innerHTML = '密文识别结果&emsp;&emsp;&emsp;&emsp;&emsp;ExecutionTime:&emsp;' + timeRecord;
+      // tableDisplay();
+    }
+  });
+ });
+</script>
+</body>
+</html>
+
+<script type="text/html" id="editDialog">
+  <form class="layui-form" action="" style="padding: 20px;" id="editDialogForm">
+      <div class="layui-form-item">
+          <label class="layui-form-label">加密算法</label>
+          <div class="layui-input-block">
+              <!-- <input type="text" name="admin" placeholder="请输入管理员名称" autocomplete="off" class="layui-input"> -->
+              <!-- <input type="checkbox" name="DES" title="DES"> -->
+              <input type="checkbox" name="3DES" title="3DES">
+              <!-- <input type="checkbox" name="RC4" title="RC4"> -->
+              <input type="checkbox" name="AES" title="AES">
+              <input type="checkbox" name="Blowfish" title="Blowfish">
+              <input type="checkbox" name="RSA" title="RSA">
+              <!-- <input type="checkbox" name="MD5" title="MD5"> -->
+              <!-- <input type="checkbox" name="SHA-1" title="SHA-1"> -->
+          </div>
+      </div>
+      <!-- <div class="layui-form-item">
+        <label class="layui-form-label">category</label>
+        <div class="layui-input-inline">
+           <input type="text" name="category" placeholder="number of categories" autocomplete="off" class="layui-input">
+        </div>
+      </div> -->
+      <div class="layui-form-item">
+        <label class="layui-form-label">model_name</label>
+        <div class="layui-input-inline">
+            <select name="classifier">
+              <option value="" select="">chose classifier</option>
+              <option value="RF">RF</option>
+              <option value="SVM">SVM</option>
+              <option value="AlexNet">AlexNet</option>
+              <option value="SCNN">SCNN</option>
+              <option value="ResNet"> ResNet</option>
+              <option value="VGG">VGG</option>
+            </select>  
+        </div>
+      </div>
+      <!-- <div class="layui-form-item">
+          <label class="layui-form-label">ratio</label>
+          <div class="layui-input-inline">
+              <input type="text" name="ratio" placeholder="ratio default 0" autocomplete="off" class="layui-input">
+          </div>
+      </div> -->
+      <!-- <div class="layui-form-item">
+          <label class="layui-form-label">input_channel</label>
+          <div class="layui-input-inline">
+              <input type="text" name="input_channel" placeholder="number of features" autocomplete="off" class="layui-input">
+          </div>
+      </div> -->
+      <!-- <div class="layui-form-item">
+          <label class="layui-form-label">epoch</label>
+          <div class="layui-input-inline">
+              <input type="text" name="epoch" placeholder="epoch default 30" autocomplete="off" class="layui-input">
+          </div>
+      </div> -->
+      <div class="layui-form-item">
+          <label class="layui-form-label">batch</label>
+          <div class="layui-input-inline">
+              <input type="text" name="batch" value="300" placeholder="输入默认：300" autocomplete="off" class="layui-input">
+          </div>
+      </div>
+      <!-- <div class="layui-form-item">
+          <label class="layui-form-label">loss_function</label>
+          <div class="layui-input-inline">
+              <select name="loss_function">
+                <option value="CE" select="">CE</option>
+                <option value="NLL">NLL</option>
+                <option value="MSE">MSE</option>
+              </select>    
+          </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">optimizer</label>
+        <div class="layui-input-inline">
+            <select name="optimizer">
+              <option value="Adam" select="">Adam</option>
+              <option value="RMSprop">RMSprop</option>
+              <option value="Adadelta">Adadelta</option>
+              <option value="SGD">SGD</option>
+            </select>  
+        </div>
+      </div> -->
+      <div class="layui-form-item">
+        <label class="layui-form-label">save_mode</label>
+        <div class="layui-input-inline">
+            <input type="radio" name="save_mode" value="para" title="para" checked>
+            <input type="radio" name="save_mode" value="total" title="total">
+        </div>
+      </div>
+      <!-- <div class="layui-form-item">
+        <label class="layui-form-label">col_name</label>
+        <div class="layui-input-inline">
+            <input type="text" name="col_name" placeholder="enter col_name" autocomplete="off" class="layui-input" disabled>
+        </div>
+      </div> -->
+
+  </form>
+</script>
+
+<script>
+  layuiModules=['table', 'layer','form'];
+
+  function mounted() {
+      $('#test3').click(function () {
+        layer.open({
+          type: 1,
+          title: '参数选择',
+          area:['40%','65%'],
+          content: $('#editDialog').html(), //这里content是一个普通的String
+          btn: ['提交', '返回'],
+          success: function (index, layero) {
+              // 不进行render渲染的话下拉框没法刷新出来
+              form.render();
+              // form.val("editDialogForm",data);
+          },
+          yes: function (index, layero) {
+              var formData = formArray2Data($('#editDialogForm').serializeArray());
+              console.log(formData);
+              if(!formData['3DES']&&!formData['Blowfish']
+              &&!formData['RSA']&&!formData['AES']){
+                alert('加密算法不能为空！');
+              }
+              else if(formData['classifier']===''){
+                alert('分类器不能为空！');
+              }
+              else if(formData['batch']===''){
+                alert('batch不能为空！');
+              }
+              // else if(formData['input_channel']===''){
+              //   alert('特征数不能为空！');
+              // }
+              // else if(formData['col_name']===''){
+              //   alert('特征名称不能为空！');
+              // }
+              else{
+                var username = window.sessionStorage.getItem('username');
+                var userdegree = window.sessionStorage.getItem('userdegree');
+                formData['username'] = username;
+                formData['userdegree'] = userdegree;
+                var url = 'http://122.51.255.207:8080/CipherResult';
+                var msgdata = Ajax(formData, url, 'GET');
+                if(msgdata['msg']==='success'){
+                    alert('Ciphering, you will receive an email later!');
+                    console.log(msgdata);
+                    // location.reload();
+                }else{
+                    alert('error found!');
+                }
+                layer.close(index);
+              }
+          },
+          btn2: function (index, layero) {
+              //return false 开启该代码可禁止点击该按钮关闭
+          }
+      });
+    })
+  }
+</script>

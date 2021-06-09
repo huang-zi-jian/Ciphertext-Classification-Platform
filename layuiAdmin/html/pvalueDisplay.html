@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>layuiAdmin</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../layui/css/layui.css"  media="all">
+    <!-- 引入hightcharts包 -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- 导入paint画图函数 -->
+    <script src="../js/Paint.js"></script>
+    <!-- 导入ajax请求封装函数 -->
+    <script src="../js/Ajax.js"></script>
+    <script>
+      window.onload = function(){
+        Data = {Algorithm: 'DES', Mode: 'ECB'};
+        Url = "http://122.51.255.207:8000/statistics/p-value";
+        var msgdata = Ajax(Data, Url);
+        cipherdata = msgdata['data'];
+        randomdata = msgdata['random_feature'];
+
+        paint('BlockFrequency', cipherdata['BlockFrequency']);
+        paint('CumulativeSums1', cipherdata['CumulativeSums1']);
+        paint('CumulativeSums2', cipherdata['CumulativeSums2']);
+        paint('FFT', cipherdata['FFT']);
+        paint('Frequency', cipherdata['Frequency']);
+        paint('LinearComplexity', cipherdata['LinearComplexity']);
+        paint('LongestRun', cipherdata['LongestRun']);
+        paint('OverlappingTemplate', cipherdata['OverlappingTemplate']);
+        paint('Rank', cipherdata['Rank']);
+        paint('Runs', cipherdata['Runs']);
+        // paint('Universal', cipherdata['Universal']);
+
+
+        paint('BlockFrequency-随机文件', randomdata['BlockFrequency']);
+        paint('CumulativeSums1-随机文件', randomdata['CumulativeSums1']);
+        paint('CumulativeSums2-随机文件', randomdata['CumulativeSums2']);
+        paint('FFT-随机文件', randomdata['FFT']);
+        paint('Frequency-随机文件', randomdata['Frequency']);
+        paint('LinearComplexity-随机文件', randomdata['LinearComplexity']);
+        paint('LongestRun-随机文件', randomdata['LongestRun']);
+        paint('OverlappingTemplate-随机文件', randomdata['OverlappingTemplate']);
+        paint('Rank-随机文件', randomdata['Rank']);
+        paint('Runs-随机文件', randomdata['Runs']);
+        // paint('Universal-random', randomdata['Universal']);
+      }
+    </script>
+</head>
+<body>
+
+<blockquote class="layui-elem-quote">
+  <p style="color:teal; font-size: 20px; font-weight: 550;">加密算法特征指标展示</p>
+</blockquote>
+
+
+<div id="indexBlock">
+  
+  <form class="layui-form" action="">
+    
+    <div class="layui-form-item">
+      <label class="layui-form-label">加密算法</label>
+      <div class="layui-input-inline">
+        <select lay-filter="Category" name="EncryptionCategory">
+          <option value="" selected="">请选择加密类别</option>
+          <option value="对称">对称加密</option>
+          <option value="非对称">非对称加密</option>
+          <option value="哈希">哈希加密</option>
+        </select>
+      </div>
+      <div class="layui-input-inline">
+        <select id="Algorithm" name="EncryptionAlgorithm">
+          <!-- 可用disabled=""来标记不可选择项 -->
+          <option value="">请选择加密算法</option>
+          <option value="DES">DES</option>
+          <option value="3DES">3DES</option>
+          <option value="AES">AES</option>
+          <option value="Blowfish">Blowfish</option>
+          <option value="MD5">MD5</option>
+          <option value="RC4">RC4</option>
+          <option value="RSA">RSA</option>
+          <option value="SHA-1">SHA-1</option>
+          <option value="SHA-512">SHA-512</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="layui-form-item">
+      <label class="layui-form-label">加密模式</label>
+      <div class="layui-input-block">
+        <input type="radio" name="encryptionMode" value="ECB" title="ECB" checked="">
+        <input type="radio" name="encryptionMode" value="CBC" title="CBC">
+        <!-- <input type="radio" name="sex" value="禁" title="禁用" disabled=""> -->
+      </div>
+    </div>
+  
+    <div class="layui-form-item">
+      <div class="layui-input-block">
+        <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+	<button type="button" id="uploadfile" class="layui-btn layui-btn-warm">上传特征文件</button>
+      </div>
+    </div>
+  </form>
+
+    <div id="mountNode"></div>
+    <div class="layui-row">
+      <div class="layui-col-md6">
+        <div id="BlockFrequency" style="min-width:400px;height:400px"></div>
+      </div>
+      <div class="layui-col-md6">
+        <div id="BlockFrequency-随机文件" style="min-width:400px;height:400px"></div>
+      </div>
+    </div>
+    <div class="layui-row">
+      <div class="layui-col-md6">
+        <div id="CumulativeSums1" style="min-width:400px;height:400px"></div>
+      </div>
+      <div class="layui-col-md6">
+        <div id="CumulativeSums1-随机文件" style="min-width:400px;height:400px"></div>
+      </div>
+    </div>
+    <div class="layui-row">
+      <div class="layui-col-md6">
+        <div id="CumulativeSums2" style="min-width:400px;height:400px"></div>
+      </div>
+      <div class="layui-col-md6">
+        <div id="CumulativeSums2-随机文件" style="min-width:400px;height:400px"></div>
+      </div>
+    </div>
+    <div class="layui-row">
+      <div class="layui-col-md6">
+        <div id="FFT" style="min-width:400px;height:400px"></div>
+      </div>
+      <div class="layui-col-md6">
+        <div id="FFT-随机文件" style="min-width:400px;height:400px"></div>
+      </div>
+    </div>
+    <div class="layui-row">
+      <div class="layui-col-md6">
+        <div id="Frequency" style="min-width:400px;height:400px"></div>
+      </div>
+      <div class="layui-col-md6">
+        <div id="Frequency-随机文件" style="min-width:400px;height:400px"></div>
+      </div>
+    </div>
+    <div class="layui-row">
+      <div class="layui-col-md6">
+        <div id="LinearComplexity" style="min-width:400px;height:400px"></div>
+      </div>
+      <div class="layui-col-md6">
+        <div id="LinearComplexity-随机文件" style="min-width:400px;height:400px"></div>
+      </div>
+    </div>
+    <div class="layui-row">
+      <div class="layui-col-md6">
+        <div id="LongestRun" style="min-width:400px;height:400px"></div>
+      </div>
+      <div class="layui-col-md6">
+        <div id="LongestRun-随机文件" style="min-width:400px;height:400px"></div>
+      </div>
+    </div>
+    <div class="layui-row">
+      <div class="layui-col-md6">
+        <div id="OverlappingTemplate" style="min-width:400px;height:400px"></div>
+      </div>
+      <div class="layui-col-md6">
+        <div id="OverlappingTemplate-随机文件" style="min-width:400px;height:400px"></div>
+      </div>
+    </div>
+    <div class="layui-row">
+      <div class="layui-col-md6">
+        <div id="Rank" style="min-width:400px;height:400px"></div>
+      </div>
+      <div class="layui-col-md6">
+        <div id="Rank-随机文件" style="min-width:400px;height:400px"></div>
+      </div>
+    </div>
+    <div class="layui-row">
+      <div class="layui-col-md6">
+        <div id="Runs" style="min-width:400px;height:400px"></div>
+      </div>
+      <div class="layui-col-md6">
+        <div id="Runs-随机文件" style="min-width:400px;height:400px"></div>
+      </div>
+    </div>
+    <!-- <div class="layui-row">
+      <div class="layui-col-md6">
+        <div id="Universal" style="min-width:400px;height:400px"></div>
+      </div>
+      <div class="layui-col-md6">
+        <div id="Universal-random" style="min-width:400px;height:400px"></div>
+      </div>
+    </div> -->
+
+
+    <!-- <div id="BlockFrequency" style="min-width:400px;height:400px"></div> -->
+    <!-- <div id="CumulativeSums1" style="min-width:400px;height:400px"></div>
+    <div id="CumulativeSums2" style="min-width:400px;height:400px"></div>
+    <div id="FFT" style="min-width:400px;height:400px"></div>
+    <div id="Frequency" style="min-width:400px;height:400px"></div>
+    <div id="LinearComplexity" style="min-width:400px;height:400px"></div>
+    <div id="LongestRun" style="min-width:400px;height:400px"></div>
+    <div id="OverlappingTemplate" style="min-width:400px;height:400px"></div>
+    <div id="Rank" style="min-width:400px;height:400px"></div>
+    <div id="Runs" style="min-width:400px;height:400px"></div>
+    <div id="Universal" style="min-width:400px;height:400px"></div> -->
+
+</div>
+
+<script src="../layui/layui.js" charset="utf-8"></script>
+<script src="../js/jquery.min.js"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+<script>
+layui.use(['form', 'layedit', 'laydate'], function(){
+  var form = layui.form
+  ,layer = layui.layer
+  ,layedit = layui.layedit
+  
+    //自定义验证规则
+  form.verify({
+    title: function(value){
+      if(value.length < 5){
+        return '标题至少得5个字符啊';
+      }
+    }
+    ,pass: [
+      /^[\S]{6,12}$/
+      ,'密码必须6到12位，且不能出现空格'
+    ]
+    ,content: function(value){
+      layedit.sync(editIndex);
+    }
+  });
+
+
+  //监听提交
+  form.on('submit(demo1)', function(data){
+    // layer.alert(JSON.stringify(data.field), {
+    //   title: '提交的信息'
+    // })
+    console.log(data.field);
+    Data = {Algorithm: data.field['EncryptionAlgorithm'], Mode: data.field['encryptionMode']};
+    Url = "http://122.51.255.207:8000/statistics/p-value";
+    var msgdata = Ajax(Data, Url, 'GET');
+    cipherdata = msgdata['data'];
+    randomdata = msgdata['random_feature'];
+
+    paint('BlockFrequency', cipherdata['BlockFrequency']);
+    paint('CumulativeSums1', cipherdata['CumulativeSums1']);
+    paint('CumulativeSums2', cipherdata['CumulativeSums2']);
+    paint('FFT', cipherdata['FFT']);
+    paint('Frequency', cipherdata['Frequency']);
+    paint('LinearComplexity', cipherdata['LinearComplexity']);
+    paint('LongestRun', cipherdata['LongestRun']);
+    paint('OverlappingTemplate', cipherdata['OverlappingTemplate']);
+    paint('Rank', cipherdata['Rank']);
+    paint('Runs', cipherdata['Runs']);
+    // paint('Universal', cipherdata['Universal']);
+
+
+    paint('BlockFrequency-随机文件', randomdata['BlockFrequency']);
+    paint('CumulativeSums1-随机文件', randomdata['CumulativeSums1']);
+    paint('CumulativeSums2-随机文件', randomdata['CumulativeSums2']);
+    paint('FFT-随机文件', randomdata['FFT']);
+    paint('Frequency-随机文件', randomdata['Frequency']);
+    paint('LinearComplexity-随机文件', randomdata['LinearComplexity']);
+    paint('LongestRun-随机文件', randomdata['LongestRun']);
+    paint('OverlappingTemplate-随机文件', randomdata['OverlappingTemplate']);
+    paint('Rank-随机文件', randomdata['Rank']);
+    paint('Runs-随机文件', randomdata['Runs']);
+    // paint('Universal-random', randomdata['Universal']);
+
+    return false;
+  });
+ 
+  // 设置下拉框联动
+  form.on('select(Category)', function(data){
+    // 控制台打印选择下拉框value值
+    console.log(data.value);
+    var area=document.getElementById("Algorithm");
+    var ECBmode = document.getElementsByName("encryptionMode")[0];
+    var CBCmode = document.getElementsByName("encryptionMode")[0];
+    //  $('#Algorithm').empty() , 最后一定要用form.render('select')进行刷新渲染
+    switch(data.value){
+      case "对称": 
+        area.innerHTML="<option>DES</option><option>3DES</option><option>AES</option><option>Blowfish</option><option>RC4</option>";
+        ECBmode.removeAttribute('disabled');
+        CBCmode.removeAttribute('disabled');
+        form.render('select');
+        break;
+      case "非对称":
+        area.innerHTML="<option>RSA</option>";
+        ECBmode.setAttribute('disabled', 'disabled');
+        CBCmode.setAttribute('disabled', 'disabled');
+        form.render('select');
+        break;
+      case "哈希":
+        area.innerHTML="<option>MD5</option><option>SHA-1</option><option>SHA-512</option>";
+        ECBmode.setAttribute('disabled', 'disabled');
+        CBCmode.setAttribute('disabled', 'disabled');
+        form.render('select');
+        break;
+      case "":
+        area.innerHTML="<option>DES</option><option>3DES</option><option>AES</option><option>Blowfish</option><option>RC4</option><option>RSA</option><option>MD5</option><option>SHA-1</option><option>SHA-512</option>";
+        ECBmode.removeAttribute('disabled');
+        CBCmode.removeAttribute('disabled');
+        form.render('select');
+        break;
+      default:
+        alert("error");
+    }
+
+  })
+});
+</script>
+<!-- 给每个特征标签绑定事件 -->
+<script>
+    $(function () {
+        $("#uploadfile").on("click", function (dom) {
+        	//这个dom对象里包括了当前点击的对象值
+            console.log($(dom.currentTarget).text());
+            location.href = 'pvalue_file_upload.html';
+        })
+
+    });
+</script>
+</body>
+</html>

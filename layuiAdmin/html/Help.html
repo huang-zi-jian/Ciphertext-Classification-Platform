@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../layui/css/layui.css"  media="all">
+    <title>console</title>
+
+</head>
+<body>
+<div class="topGrid">
+
+    <div class="itemWrapper">
+        <div class="item">
+            <div class="name">Log</div>
+            <div class="number">日志</div>
+            <img src="../image/topGridBg.png">
+        </div>
+    </div>
+
+    <div class="itemWrapper">
+        <div class="item">
+            <div class="name">User Management</div>
+            <div class="number">用户管理</div>
+            <img src="../image/topGridBg.png">
+        </div>
+    </div>
+
+    <div class="itemWrapper">
+        <div class="item">
+            <div class="name">System Management</div>
+            <div class="number">系统管理</div>
+            <img src="../image/topGridBg.png">
+        </div>
+    </div>
+
+    <div class="itemWrapper">
+        <div class="item">
+            <div class="name">Help</div>
+            <div class="number">帮助</div>
+            <img src="../image/topGridBg.png">
+        </div>
+    </div>
+
+</div>
+
+<blockquote class="layui-elem-quote" style="height: 15px; margin-top: 20px;">
+  <p style="color:teal; font-size: 20px; font-weight: 550;">系统帮助</p>
+</blockquote>
+
+<div class="layui-tab" lay-filter="test" style="margin-top: 30px;">
+<ul class="layui-tab-title">
+    <li class="layui-this" lay-id="11">用户权限</li>
+    <li lay-id="22">密文特征生成</li>
+    <li lay-id="33">模型训练</li>
+    <li lay-id="44">密文分类识别</li>
+    <li lay-id="55">密文分类记录查询</li>
+</ul>
+
+<div class="layui-tab-content">
+    <div class="layui-tab-item layui-show">
+        <blockquote class="layui-elem-quote" style="height: 15px;">
+            <p style="color:teal; font-size: 20px; font-weight: 380;">
+                用户权限如下表所示：
+            </p>
+          </blockquote>
+        <table class="layui-table" lay-skin="line">
+            <colgroup>
+              <col width="300">
+              <col>
+            </colgroup>
+            <thead>
+              <tr>
+                <th>用户等级</th>
+                <th>不可执行的操作</th>
+              </tr> 
+            </thead>
+            <tbody>
+              <tr>
+                <td>Advanced</td>
+                <td>无</td>
+              </tr>
+              <tr>
+                <td>Medium</td>
+                <td>控制台——用户管理/系统管理</td>
+              </tr>
+              <tr>
+                <td>Junior</td>
+                <td>控制台——日志查询/用户管理/系统管理&nbsp;&nbsp;&nbsp;&nbsp;各种文件上传&nbsp;&nbsp;&nbsp;&nbsp;密文分类记录——记录删除以及修改</td>
+              </tr>
+            </tbody>
+          </table>   
+    </div>
+
+    <div class="layui-tab-item">
+        <img src="../image/featuresGenerate.png" alt="" style="width: auto; height: auto; max-width: 100%; max-height: 100%;">
+    </div>
+    <div class="layui-tab-item">
+      <img src="../image/modelTrain.jpg" alt="" style="width: auto; height: auto; max-width: 100%; max-height: 100%;">
+    </div>
+    <div class="layui-tab-item">
+      <img src="../image/ciphertext.jpg" alt="" style="width: auto; height: auto; max-width: 100%; max-height: 100%;">
+    </div>
+    <div class="layui-tab-item">
+        <img src="../image/classifyRecord.png" alt="" style="width: auto; height: auto; max-width: 100%; max-height: 100%;">
+    </div>
+</div>
+</div>
+
+
+<script src="../js/jquery.min.js"></script>
+<script src="../layui/layui.js"></script>
+
+<script>
+layui.use('element', function(){
+  var $ = layui.jquery
+  ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+  
+  //触发事件
+  var active = {
+    tabAdd: function(){
+      //新增一个Tab项
+      element.tabAdd('demo', {
+        title: '新选项'+ (Math.random()*1000|0) //用于演示
+        ,content: '内容'+ (Math.random()*1000|0)
+        ,id: new Date().getTime() //实际使用一般是规定好的id，这里以时间戳模拟下
+      })
+    }
+    ,tabDelete: function(othis){
+      //删除指定Tab项
+      element.tabDelete('demo', '44'); //删除：“商品管理”
+      
+      
+      othis.addClass('layui-btn-disabled');
+    }
+    ,tabChange: function(){
+      //切换到指定Tab项
+      element.tabChange('demo', '22'); //切换到：用户管理
+    }
+  };
+  
+  $('.site-demo-active').on('click', function(){
+    var othis = $(this), type = othis.data('type');
+    active[type] ? active[type].call(this, othis) : '';
+  });
+  
+  //Hash地址的定位
+  var layid = location.hash.replace(/^#test=/, '');
+  element.tabChange('test', layid);
+  
+  element.on('tab(test)', function(elem){
+    location.hash = 'test='+ $(this).attr('lay-id');
+  });
+  
+});
+</script>
+
+<script>
+layui.use('table', function(){
+    var table = layui.table;
+
+    $(function () {
+        $(".itemWrapper").on("click", function (dom) {
+        	//这个dom对象里包括了当前点击的对象值
+            // console.log($(dom.currentTarget).text());
+            
+            // 获取当前dom对象域的文本内容
+            var str = dom.currentTarget.innerText;
+            // console.log(str);
+            // console.log(str.indexOf('User'));
+            var userdegree = window.sessionStorage.getItem('userdegree');
+            // 说明用户点击的是日志板块
+            if(str.indexOf('Log')!=-1){
+                // 如果不是系统顶级用户就没有权限查看
+                if(userdegree!=='Advanced' && userdegree!=='Medium'){
+                    alert('Permission Deny!');
+                }else{
+                    console.log('查看日志板块！');
+                    location.href = 'consoleLog.html'
+                }
+            }
+            // 说明点击的是用户管理板块
+            else if(str.indexOf('User')!=-1){
+                if(userdegree!=='Advanced'){
+                    alert('Permission Deny!');
+                }else{
+                    console.log('查看用户管理板块！');
+                    location.href = 'UserManagement.html';
+                }
+            }
+            // 说明点击的是系统管理板块
+            else if(str.indexOf('System')!=-1){
+                if(userdegree!=='Advanced'){
+                    alert('Permission Deny!');
+                }else{
+                    console.log('查看系统管理板块！');
+                    location.href = 'SystemManagement.html';
+                }
+            }
+            // 说明点击的是帮助板块
+            else if(str.indexOf('Help')!=-1){
+                console.log('查看帮助板块！');
+                location.href = 'Help.html';
+            }
+
+        })
+
+    });
+});
+</script>
+</body>
+</html>

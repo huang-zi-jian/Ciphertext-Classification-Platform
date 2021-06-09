@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Cipher-Classify</title>
+
+</head>
+<body>
+<div class="parentTop">
+    <p class="appName">Cipher-Classify</p>
+    <div class="loginNameDiv">
+        <ul class="layui-nav">
+            <li class="layui-nav-item">
+              <a href="#/Help.html">控制台<span class="layui-badge">#</span></a>
+            </li>
+            <li class="layui-nav-item">
+              <a href="#/personalLog.html">个人日志<span class="layui-badge-dot"></span></a>
+            </li>
+            <li class="layui-nav-item">
+              <a id="username"><img src="image/icon_1.png" class="layui-nav-img"></a>
+              <dl class="layui-nav-child">
+                <dd><a id="parentChangePassword">修改信息</a></dd>
+                <dd><a id="safetyManager">安全管理</a></dd>
+                <dd><a id="packageCapture">网络抓包</a></dd>
+                <dd><a id="parentExit">退出</a></dd>
+              </dl>
+            </li>
+          </ul>
+
+    </div>
+</div>
+
+
+<!--左侧菜单-->
+<div class="leftMenu">
+    <ul class="layui-nav layui-nav-tree"
+        lay-filter="test" lay-shrink="all">
+    </ul>
+</div>
+<!--主要内容区-->
+<div class="parentMain">
+    <iframe id="iframeParent"></iframe>
+</div>
+
+</body>
+</html>
+<!--修改密码弹框-->
+<script type="text/html" id="dialogChangePassword">
+    <form class="layui-form" id="dialogChangePasswordForm" style="margin-top:30px;padding-right:30px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">原密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="password"
+                       placeholder="请输入原密码" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">新密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="newPassword"
+                       placeholder="请输入新密码" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">确认密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="okPassword"
+                       placeholder="请重复输入密码" class="layui-input">
+            </div>
+        </div>
+    </form>
+</script>
+
+<script src="js/jquery.min.js"></script>
+<script src="layui/layui.all.js"></script>
+<script src="js/common.js"></script>
+<script src="js/Ajax.js"></script>
+<script>
+
+    layuiModules=['layer', 'form','element'];
+    // 将登陆用户名显示在系统的右上端口
+    layui.use('laytpl', function(){
+        var laytpl = layui.laytpl;
+
+        var store = window.sessionStorage;
+        var username = store.getItem('username');
+        document.getElementById('username').innerHTML = laytpl('<img src="image/icon_1.png" class="layui-nav-img">{{d.username}}').render({username: username});    
+        // document.getElementById('username')
+    });
+
+    function mounted() {
+        //菜单列表数据
+        window.menuArray = [
+            // {
+            //     name: "首页",
+            //     id: 0,
+            //     pid: -1,
+            //     url: ''
+            // }, 
+            {
+                name: "数据集展示",
+                id: 0,
+                pid: -1,
+                url: '#/testSet.html'
+            }, {
+                name: "随机性特征提取",
+                id: 1,
+                pid: -1,
+                url: ''
+            }
+            // , {
+            //     name: "解决方案",
+            //     id: 2,
+            //     pid: -1,
+            //     url: ''
+            // }
+            , {
+                name: "密文数据生成",
+                id: 2,
+                pid: -1,
+                url: '#/index.html'
+            }, {
+                name: "分类模型训练",
+                id: 3,
+                pid: -1,
+                url: '#/index_else.html'
+            }, {
+                name: "密文分类",
+                id: 4,
+                pid: -1,
+                url: '#/CipherRecognition.html'
+            }, {
+                name: "密文分类记录",
+                id: 5,
+                pid: -1,
+                url: '#/classifyRecords.html'
+            }, {
+                name: "随机性特征生成",
+                id: 6,
+                pid: 1,
+                url: '#/featuresGenerate.html'
+            }, {
+                name: "随机性展示",
+                id: 7,
+                pid: 1,
+                url: '#/pvalueDisplay.html'
+            }
+        ];
+        formatMenus();
+        //初始化类vue路由
+        initRouter();
+
+        
+        //退出登录
+        $('#safetyManager').click(function () {
+            // $('.dialogMenu').css('display', 'none');
+            layer.open({
+                type: 1,
+                content: `<div style="padding: 20px;">是否冻结账户</div>`,
+                btn: ["确定", "取消"],
+                yes: function (index, layero) {
+                    var Data = {};
+                    Data['username'] = window.sessionStorage.getItem('username');
+                    // 进行POST请求一定要将数据json化
+                    Data = JSON.stringify(Data);
+                    var url = 'http://122.51.255.207:8000/freezeAccount';
+                    var msgdata = Ajax(Data, url, 'POST');
+                    if(msgdata['msg']==='success'){
+                        alert('账户冻结成功！');
+                    }else if(msgdata['msg']==='error'){
+                        alert('账户已被冻结！！！');
+                    }
+                    location.href = "login.html";
+                },
+                btn2: function (index, layero) {
+                    //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+        });
+
+	//网络抓包
+        $('#packageCapture').click(function () {
+            var username = window.sessionStorage.getItem('username');
+            var userdegree = window.sessionStorage.getItem('userdegree');
+            // var username = 'feifei';
+            // var userdegree = 'Advanced';
+
+            var Data = {'username': username, 'userdegree': userdegree};
+            var url = 'http://122.51.255.207:8000/PackageCapture';
+            var msgdata = Ajax(Data, url, 'GET');
+
+            if(msgdata['msg']){
+                alert('Capturing, you will receive an email later!');
+            }else{
+                alert('Request faile！');
+            }
+        });
+
+        //退出登录
+        $('#parentExit').click(function () {
+            // $('.dialogMenu').css('display', 'none');
+            layer.open({
+                type: 1,
+                content: `<div style="padding: 20px;">是否退出</div>`,
+                btn: ["确定退出", "暂不退出"],
+                yes: function (index, layero) {
+                    var Data = {};
+                    Data['username'] = window.sessionStorage.getItem('username');
+                    // 进行POST请求一定要将数据json化
+                    Data = JSON.stringify(Data);
+                    var url = 'http://122.51.255.207:8000/logout';
+                    var msgdata = Ajax(Data, url, 'POST');
+                    if(msgdata['msg']){
+                        alert('登出成功！');
+                        location.href = "login.html";
+                    }else{
+                        alert('登出失败！');
+                        layer.close(index);
+                    }
+                },
+                btn2: function (index, layero) {
+                    //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+        });
+        //显示修改密码弹框
+        $('#parentChangePassword').click(function () {
+            // $('.dialogMenu').css('display', 'none');
+            layer.open({
+                type: 1,
+                title: '修改密码',
+                content: $('#dialogChangePassword').html(), //这里content是一个普通的String
+                btn: ['确定', '取消'],
+                success: function (index, layero) {
+                    // form.render();
+                },
+                yes: function (index, layero) {
+                    // 按钮相当于调用了success中的submit函数
+                    // var result = $('#dialogChangePasswordForm').submit();
+                    // console.log(result);
+                    // layer.close(index);
+                    console.log(formArray2Data($('#dialogChangePasswordForm').serializeArray()));
+                    var passwordArray = formArray2Data($('#dialogChangePasswordForm').serializeArray());
+                    // 处理两次密码输入不同的情况
+                    if(passwordArray['newPassword']!==passwordArray['okPassword']){
+                        alert('请保证两次输入的密码相同！');
+                        return false;
+                    }
+                    // 处理密码框为空的情况
+                    else if(passwordArray['newPassword']===""||
+                    passwordArray['okPassword']===""||passwordArray['password']===""){
+                        alert('请填写完整信息！');
+                        return false;
+                    }
+                    // 处理新密码和原密码一致的情况
+                    else if(passwordArray['password']===passwordArray['newPassword']){
+                        alert('新密码和原密码一致！');
+                        return false;
+                    }
+                    layer.close(index);
+                    
+                    // 获取用户名以及密码信息作为POST请求参数
+                    var Data = {};
+                    Data['username'] = window.sessionStorage.getItem('username');
+                    Data['password'] = passwordArray['password'];
+                    Data['newPassword'] = passwordArray['newPassword'];
+                    // 进行POST请求一定要将数据json化
+                    Data = JSON.stringify(Data);
+                    console.log(Data);
+                    var url = 'http://122.51.255.207:8000/modify'; 
+                    var msgdata = Ajax(Data, url, 'POST');
+                    // console.log(msgdata);
+                    if(msgdata['msg']==='success'){
+                        alert('修改成功！');
+                    }
+                    else if(msgdata['msg']==='error'){
+                        alert('密码' + passwordArray['password'] + '错误！');
+                    }
+                    return true;
+                    
+                },
+                btn2: function (index, layero) {
+                    //return false 开启该代码可禁止点击该按钮关闭
+                }
+            });
+        });
+    }
+
+
+
+    /**
+     *格式化菜单数据
+     */
+    function formatMenus() {
+        findChildMenus(-1);
+        window.element.render('nav');
+    }
+
+    /**
+     * 根据id查找下级菜单
+     * @param id
+     */
+    function findChildMenus(id) {
+        if (id == -1) {
+            menuArray.forEach(function (item) {
+                if (item.pid == id) {
+                    $('.leftMenu ul')
+                        .append('<li menu-id="' + item.id + '" class="layui-nav-item"><a href="' + item.url + '">' + item.name + '</a></li>')
+                    findChildMenus(item.id);
+                }
+            });
+
+        } else {
+            menuArray.forEach(function (item) {
+                if (item.pid == id) {
+                    $('[menu-id="' + item.pid + '"]>a').removeAttr('href');
+                    if (!$('[menu-id="' + item.pid + '"]').children('dl')[0]) {
+                        $('[menu-id="' + item.pid + '"]').append('<dl class="layui-nav-child"></dl>')
+                    }
+                    $('[menu-id="' + item.pid + '"] dl')
+                        .append('<dd menu-id="' + item.id + '"><a href="' + item.url + '">' + item.name + '</a></dd>');
+                    findChildMenus(item.id);
+                }
+            });
+        }
+
+    }
+
+
+</script>

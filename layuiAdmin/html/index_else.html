@@ -1,0 +1,437 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>index</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <link rel="stylesheet" href="css/comon0.css">
+    <link rel="stylesheet" href="../layui/css/layui.css"  media="all">
+
+    <script src="https://code.highcharts.com.cn/highcharts/highcharts.js"></script>
+    <script src="https://code.highcharts.com.cn/highcharts/modules/exporting.js"></script>
+    <script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+</head>
+
+<script>
+	$(window).load(function(){
+    $(".loading").fadeOut()
+  })  
+			
+  /****/
+  $(document).ready(function(){
+    var whei=$(window).width()
+    $("html").css({fontSize:whei/20})
+    $(window).resize(function(){
+      var whei=$(window).width()
+      $("html").css({fontSize:whei/20})
+  });
+});
+</script>
+
+<script src="../js/jquery.min.js"></script>
+<script src="../js/Ajax.js"></script>
+<script type="text/javascript" src="js/echarts.min.js"></script> 
+<script language="JavaScript" src="js/js.js"></script> 
+<script language="JavaScript" src="js/piechart.js"></script>
+
+<body>
+
+<!-- 
+  设置动态场景
+<div class="canvas" style="opacity: .2">
+	<iframe frameborder="0" src="js/index.html" style="width: 100%; height: 100%"></iframe>
+</div> 
+-->
+
+<blockquote class="layui-elem-quote">
+  <p style="color:teal; font-size: 20px; font-weight: 550;">模型训练</p>
+</blockquote>
+
+<div class="loading">
+  <div class="loadbox"> <img src="picture/loading.gif"> 页面加载中... </div>
+</div>
+
+
+<!-- 
+  设定顶部时间显示
+  <div class="head">
+  <h1>大数据可视化展板通用模板</h1>
+  <div class="weather">
+    <span id="showTime"></span>
+  </div>
+	
+<script>
+    var t = null;
+    t = setTimeout(time,1000);//開始运行
+    function time()
+    {
+       clearTimeout(t);//清除定时器
+       dt = new Date();
+       var y=dt.getFullYear();
+       var mt=dt.getMonth()+1;
+       var day=dt.getDate();
+       var h=dt.getHours();//获取时
+       var m=dt.getMinutes();//获取分
+       var s=dt.getSeconds();//获取秒
+       document.getElementById("showTime").innerHTML = y+"年"+mt+"月"+day+"-"+h+"时"+m+"分"+s+"秒";
+       t = setTimeout(time,1000); //设定定时器，循环运行     
+    } 
+
+</script>
+	
+	
+</div> 
+-->
+
+<!-- id为echart系列的图像在js.is文件中被渲染 -->
+<div class="mainbox">
+  <ul class="clearfix">
+    <li>
+      <!-- <div class="boxall" style="height: 3.2rem"> -->
+      <div class="boxall" style="height: 3.2rem">
+        <!-- <div class="alltitle">模块标题样式</div> -->
+        <div class="allnav" id="echart1"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <!-- <div class="alltitle">模块标题样式</div> -->
+        <div class="allnav" id="echart2"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <div style="height:100%; width: 100%;">
+		  	<!-- <div class="sy" id="fb1"></div>
+				<div class="sy" id="fb2"></div>
+				<div class="sy" id="fb3"></div> -->
+
+        <div class="allnav" id="echart3"></div>
+        <div class="boxfoot"></div>
+		  </div>
+        <!-- <div class="boxfoot">
+			
+		  </div> -->
+      </div>
+    </li>
+    <li>
+      <div class="bar">
+        <div class="barbox">
+          <ul class="clearfix">
+            <!-- <li class="pulll_left counter">12581189</li>
+            <li class="pulll_left counter">3912410</li> -->
+            <div class="layui-upload">
+              <!-- 可以认为该文件button和一个input部件关联，该input部件name属性值默认为'file' -->
+              <button type="button" class="layui-btn layui-btn-warm" id="test1"><i class="layui-icon"></i>上传压缩文件</button>
+              <button type="button" class="layui-btn" id="test2">开始上传</button>
+            </div>
+          </ul>
+        </div>
+        <!-- <div class="barbox2">
+          <ul class="clearfix">
+            <li class="pulll_left">2018年总收入情况 </li>
+            <li class="pulll_left">2018年总支出情况</li>
+          </ul>
+        </div> -->
+      </div>
+      <div class="map">
+        <!-- <div class="map1"><img src="picture/lbx.png"></div>
+        <div class="map2"><img src="picture/jt.png"></div>
+        <div class="map3"><img src="picture/map.png"></div> -->
+        <!-- <div><button type="button">Click Me!</button></div> -->
+        <!-- 考虑将地图换成以下网址中的饼状图
+          https://echarts.apache.org/examples/zh/editor.html?c=pie-nest 
+        -->
+        <!-- 中国地图div
+          <div class="map4" id="map_1"></div>
+        -->
+        <button type="button" class="layui-btn layui-btn layui-btn-radius layui-btn-danger" id="model" style="position: relative;margin-left: 40%; margin-top: 5%;">模型获取</button>
+        <div class="map4" id="piechart"></div>
+        <!-- <div id="piechart"></div> -->
+      </div>
+    </li>
+    <li>
+      <div class="boxall" style="height:3.2rem">
+        <!-- <div class="alltitle">模块标题样式</div> -->
+        <div class="allnav" id="echart4"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <!-- <div class="alltitle">模块标题样式</div> -->
+        <div class="allnav" id="echart5"></div>
+        <div class="boxfoot"></div>
+      </div>
+      <div class="boxall" style="height: 3.2rem">
+        <!-- <div class="alltitle">模块标题样式</div> -->
+        <div class="allnav" id="echart6"></div>
+        <div class="boxfoot"></div>
+      </div>
+    </li>
+  </ul>
+</div>
+<div class="back"></div>
+
+
+<!-- 绘制中国地图
+<script type="text/javascript" src="js/china.js"></script> 
+<script type="text/javascript" src="js/area_echarts.js"></script>
+ -->
+
+
+
+ <script type="text/html" id="editDialog">
+  <form class="layui-form" action="" style="padding: 20px;" id="editDialogForm">
+      <div class="layui-form-item">
+          <label class="layui-form-label" style="white-space: nowrap;">加密算法</label>
+          <div class="layui-input-block">
+              <!-- <input type="checkbox" name="DES" title="DES"> -->
+              <input type="checkbox" name="3DES" title="3DES" value="3DES">
+              <!-- <input type="checkbox" name="RC4" title="RC4"> -->
+              <input type="checkbox" name="AES" title="AES" value="AES">
+              <input type="checkbox" name="Blowfish" title="Blowfish" value="Blowfish">
+              <input type="checkbox" name="RSA" title="RSA" value="RSA">
+              <!-- <input type="checkbox" name="MD5" title="MD5"> -->
+              <!-- <input type="checkbox" name="SHA-1" title="SHA-1"> -->
+          </div>
+      </div>
+      <!-- <div class="layui-form-item">
+        <label class="layui-form-label">category</label>
+        <div class="layui-input-inline">
+           <input type="text" name="category" placeholder="number of categories" autocomplete="off" class="layui-input">
+        </div>
+      </div> -->
+      <div class="layui-form-item">
+        <label class="layui-form-label" style="white-space: nowrap; width: 30%;">model_name</label>
+        <div class="layui-input-inline">
+            <select lay-filter="classifier" name="classifier">
+              <option value="" select="">chose classifier</option>
+              <option value="RF">RF</option>
+              <option value="SVM">SVM</option>
+              <option value="AlexNet">AlexNet</option>
+              <option value="SCNN">SCNN</option>
+              <option value="ResNet"> ResNet</option>
+              <option value="VGG">VGG</option>
+            </select>  
+        </div>
+      </div>
+      <div class="layui-form-item">
+          <label class="layui-form-label" style="white-space: nowrap; width: 30%;">ratio</label>
+          <div class="layui-input-inline">
+              <!-- <input type="text" name="ratio" placeholder="ratio default 0.8" autocomplete="off" class="layui-input"> -->
+              <input type="text" name="ratio" value="0.8" placeholder="输入默认值：0.8" autocomplete="off" class="layui-input">
+          </div>
+      </div>
+      <!-- <div class="layui-form-item">
+          <label class="layui-form-label">input_channel</label>
+          <div class="layui-input-inline">
+              <input type="text" name="input_channel" placeholder="number of features" autocomplete="off" class="layui-input">
+          </div>
+      </div> -->
+      <div class="layui-form-item">
+          <label class="layui-form-label" style="white-space: nowrap; width: 30%;">epoch</label>
+          <div class="layui-input-inline">
+              <input type="text" name="epoch" placeholder="请选择训练算法" autocomplete="off" class="layui-input" disabled>
+          </div>
+      </div>
+      <div class="layui-form-item">
+          <label class="layui-form-label" style="white-space: nowrap; width: 30%;">batch</label>
+          <div class="layui-input-inline">
+              <input type="text" name="batch" value="1000" placeholder="输入默认值：1000" autocomplete="off" class="layui-input">
+          </div>
+      </div>
+      <div class="layui-form-item">
+          <label class="layui-form-label" style="white-space: nowrap; width: 30%;">loss_function</label>
+          <div class="layui-input-inline">
+              <select name="loss_function">
+                <option value="CE" select="">CE</option>
+                <option value="NLL">NLL</option>
+                <option value="MSE">MSE</option>
+              </select>    
+          </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label" style="white-space: nowrap; width: 30%;">optimizer</label>
+        <div class="layui-input-inline">
+            <select name="optimizer">
+              <option value="Adam" select="">Adam</option>
+              <option value="RMSprop">RMSprop</option>
+              <option value="Adadelta">Adadelta</option>
+              <option value="SGD">SGD</option>
+            </select>  
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label" style="white-space: nowrap; width: 30%;">save_mode</label>
+        <div class="layui-input-inline">
+            <input type="radio" name="save_mode" value="para" title="para" checked>
+            <input type="radio" name="save_mode" value="total" title="total">
+        </div>
+      </div>
+      <!-- <div class="layui-form-item">
+        <label class="layui-form-label">col_name</label>
+        <div class="layui-input-inline">
+            <input type="text" name="col_name" placeholder="enter col_name" autocomplete="off" class="layui-input" disabled>
+        </div>
+      </div> -->
+  </form>
+</script>
+
+<script src="../layui/layui.js"></script>
+<script src="../js/common.js"></script>
+
+
+<script>
+layui.use(['upload', 'form'], function(){
+  var $ = layui.jquery
+  ,upload = layui.upload
+  ,form = layui.form
+  ,layer = layui.layer;
+
+  //设定文件大小限制，默认为POST请求
+  upload.render({
+    elem: '#test1'
+    ,url: 'http://122.51.255.207:8080/trainmodel_file_upload' //改成您自己的上传接口
+    ,auto: false
+    ,bindAction: '#test2'
+    ,size: 1200000 //限制文件大小，单位 KB
+    ,accept: 'file'
+    // ,exts: 'zip|rar|7z'
+    ,exts: 'zip'
+    ,before: function(obj){
+      var userdegree = window.sessionStorage.getItem('userdegree');
+      if(userdegree==='Junior'){
+        alert('Permission Deny!')
+        return false;
+      }else{
+        return true;
+      }
+    }
+    ,done: function(res){
+      layer.msg('上传成功');
+      console.log(res);
+    }
+  });
+
+  $('#model').click(function () {
+    layer.open({
+          type: 1,
+          title: '参数选择',
+          area:['40%','80%'],
+          content: $('#editDialog').html(), //这里content是一个普通的String
+          btn: ['提交', '返回'],
+          success: function (index, layero) {
+              // 不进行render渲染的话下拉框没法刷新出来
+              form.render();
+              // form.val("editDialogForm",data);
+          },
+          yes: function (index, layero) {
+              var formData = formArray2Data($('#editDialogForm').serializeArray());
+              var username = window.sessionStorage.getItem('username');
+              var userdegree = window.sessionStorage.getItem('userdegree');
+              formData['username'] = username;
+              formData['userdegree'] = userdegree;
+              console.log(formData);
+              if(!formData['3DES']&&!formData['Blowfish']
+              &&!formData['RSA']&&!formData['AES']){
+                alert('加密算法不能为空！');
+              }
+              else if(formData['classifier']===''){
+                alert('分类器不能为空！');
+              }
+              else if(formData['ratio']===''){
+                alert('数据集划分（ratio）不能为空！');
+              }
+              else if(!(parseFloat(formData['ratio'])>0&&parseFloat(formData['ratio'])<1)){
+                alert('数据集划分（ratio）必须在（0，1）区间！');
+              }
+              else if(formData['epoch']===''){
+                alert('epoch不能为空！');
+              }
+              else if(formData['batch']===''){
+                alert('batch不能为空！');
+              }
+              else{
+                var url = 'http://122.51.255.207:8080/trainmodelResult' + '?tmptime='+(new Date()).getTime();
+                var msgdata = Ajax(formData, url, 'GET');
+                if(msgdata['msg']==='success'){
+                  alert('After training, you will receive an email!');
+                }else{
+                    alert('error found!');
+                }
+                layer.close(index);
+              }
+          },
+          btn2: function (index, layero) {
+              //return false 开启该代码可禁止点击该按钮关闭
+          }
+      });
+  });
+});
+</script>
+
+<script>
+  layui.use(['form'], function(){
+      var form = layui.form
+      ,layer = layui.layer;
+
+      // 监听表单下拉框事件
+    form.on('select(classifier)', function(data){
+      // 控制台打印选择下拉框value值
+      console.log(data.value);
+      var epoch = document.getElementsByName("epoch")[0];
+      //  $('#Algorithm').empty() , 最后一定要用form.render('select')进行刷新渲染
+      switch(data.value){
+        case "AlexNet":
+          epoch.setAttribute('value', '20'); 
+          epoch.removeAttribute('disabled');
+          epoch.setAttribute('placeholder', '输入默认值：20');
+          form.render();
+          break;
+        case "SCNN":
+          epoch.setAttribute('value', '50');
+          epoch.removeAttribute('disabled');
+          epoch.setAttribute('placeholder', '输入默认值：50');
+          form.render();
+          break;
+        case "ResNet":
+          epoch.setAttribute('value', '13');
+          epoch.removeAttribute('disabled');
+          epoch.setAttribute('placeholder', '输入默认值：13');
+          form.render();
+          break;
+        case "VGG":
+          epoch.setAttribute('value', '8');
+          epoch.removeAttribute('disabled');
+          epoch.setAttribute('placeholder', '输入默认值：8');
+          form.render();
+          break;
+        case "RF":
+          epoch.removeAttribute('value');
+          epoch.setAttribute('placeholder', '不支持该参数');
+          epoch.setAttribute('disabled', 'disabled');
+          form.render();
+          break;
+        case "SVM":
+          epoch.removeAttribute('value');
+          epoch.setAttribute('placeholder', '不支持该参数');
+          epoch.setAttribute('disabled', 'disabled');
+          form.render();
+          break;
+        case "":
+          epoch.removeAttribute('value');
+          epoch.setAttribute('placeholder', '请选择训练算法');
+          epoch.setAttribute('disabled', 'disabled');
+          form.render();
+          break;
+        default:
+          alert("error");
+      }
+  
+    })
+  })
+  </script>
+
+
+</body>
+</html>
